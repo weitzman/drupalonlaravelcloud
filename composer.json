@@ -54,7 +54,7 @@
     "extra": {
         "drupal-scaffold": {
             "locations": {
-                "web-root": "public/"
+                "web-root": "web/"
             },
             "file-mapping": {
                 "[project-root]/.editorconfig": false,
@@ -67,31 +67,31 @@
             }
         },
         "installer-paths": {
-            "public/core": [
+            "web/core": [
                 "type:drupal-core"
             ],
-            "public/libraries/{$name}": [
+            "web/libraries/{$name}": [
                 "type:drupal-library"
             ],
-            "public/modules/contrib/{$name}": [
+            "web/modules/contrib/{$name}": [
                 "type:drupal-module"
             ],
-            "public/profiles/contrib/{$name}": [
+            "web/profiles/contrib/{$name}": [
                 "type:drupal-profile"
             ],
-            "public/themes/contrib/{$name}": [
+            "web/themes/contrib/{$name}": [
                 "type:drupal-theme"
             ],
             "drush/Commands/contrib/{$name}": [
                 "type:drupal-drush"
             ],
-            "public/modules/custom/{$name}": [
+            "web/modules/custom/{$name}": [
                 "type:drupal-custom-module"
             ],
-            "public/profiles/custom/{$name}": [
+            "web/profiles/custom/{$name}": [
                 "type:drupal-custom-profile"
             ],
-            "public/themes/custom/{$name}": [
+            "web/themes/custom/{$name}": [
                 "type:drupal-custom-theme"
             ],
             "recipes/{$name}": [

@@ -6,46 +6,46 @@
 # https://www.drupal.org/docs/develop/using-composer
 
 # Ignore paths that may contain user-generated content
-/public/sites/*/files
-/public/sites/*/public
-/public/sites/*/private
-/public/sites/*/files-public
-/public/sites/*/files-private
+/web/sites/*/files
+/web/sites/*/public
+/web/sites/*/private
+/web/sites/*/files-public
+/web/sites/*/files-private
 
 # Ignore paths that may contain temporary files
-/public/sites/*/translations
-/public/sites/*/tmp
-/public/sites/*/cache
+/web/sites/*/translations
+/web/sites/*/tmp
+/web/sites/*/cache
 
 # Ignore drupal core (if not versioning drupal sources)
-/public/vendor
-/public/core
-/public/modules/README.txt
-/public/modules/contrib
-/public/profiles/README.txt
-/public/profiles/contrib
-/public/sites/development.services.yml
-/public/sites/example.settings.local.php
-/public/sites/example.sites.php
-/public/sites/README.txt
-/public/themes/README.txt
-/public/themes/contrib
-/public/.csslintrc
-/public/.editorconfig
-/public/.eslintignore
-/public/.eslintrc.json
-/public/.gitattributes
-/public/.htaccess
-/public/.ht.router.php
-/public/autoload.php
-/public/composer.json
-/public/composer.lock
-/public/example.gitignore
-/public/INSTALL.txt
-/public/LICENSE.txt
-/public/README.txt
-/public/robots.txt
-/public/update.php
+/web/vendor
+/web/core
+/web/modules/README.txt
+/web/modules/contrib
+/web/profiles/README.txt
+/web/profiles/contrib
+/web/sites/development.services.yml
+/web/sites/example.settings.local.php
+/web/sites/example.sites.php
+/web/sites/README.txt
+/web/themes/README.txt
+/web/themes/contrib
+/web/.csslintrc
+/web/.editorconfig
+/web/.eslintignore
+/web/.eslintrc.json
+/web/.gitattributes
+/web/.htaccess
+/web/.ht.router.php
+/web/autoload.php
+/web/composer.json
+/web/composer.lock
+/web/example.gitignore
+/web/INSTALL.txt
+/web/LICENSE.txt
+/web/README.txt
+/web/robots.txt
+/web/update.php
 /web.config
 
 # Ignore local environment variables
