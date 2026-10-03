@@ -13,5 +13,5 @@ use Drupal\Core\DrupalKernel;
 require_once 'public/autoload_runtime.php';
 
 return static function () {
-  return new DrupalKernel('prod', require 'autoload.php');
+  return new DrupalKernel('prod', require 'public/autoload.php');
 };
