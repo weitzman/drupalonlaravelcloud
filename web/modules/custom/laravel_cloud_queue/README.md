@@ -58,6 +58,9 @@ Drupal modules; it uses the configuration parser and agent client from
 - **Requeue exceptions:** `RequeueException`, `DelayedRequeueException` and
   `SuspendQueueException` return the item to the queue, with the requested
   delay, without counting as a failure.
+- **Lost database connection:** if the connection has dropped while the worker
+  was idle, the worker returns the item to the queue and exits. Laravel Cloud
+  starts a new worker, which receives the item again.
 - **Dashboard:** jobs are named by their Drupal queue.
 - **Size:** an item larger than 1 MiB when encoded is rejected by
   `createItem()` with an exception.

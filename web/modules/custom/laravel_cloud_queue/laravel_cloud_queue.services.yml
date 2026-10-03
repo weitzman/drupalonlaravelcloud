@@ -32,6 +32,7 @@ services:
       - '@plugin.manager.queue_worker'
       - '@Drupal\laravel_cloud_queue\Metrics'
       - '@logger.channel.laravel_cloud_queue'
+      - '@database'
       - '%laravel_cloud_queue.max_tries%'
       - '%laravel_cloud_queue.backoff%'
 

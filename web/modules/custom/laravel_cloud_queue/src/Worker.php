@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\laravel_cloud_queue;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Queue\DelayedRequeueException;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\Core\Queue\RequeueException;
@@ -22,6 +23,7 @@ class Worker {
     private readonly QueueWorkerManagerInterface $workerManager,
     private readonly Metrics $metrics,
     private readonly LoggerInterface $logger,
+    private readonly Connection $database,
     private readonly int $maxTries,
     private readonly int $backoff,
   ) {}
@@ -72,6 +74,18 @@ class Worker {
     $managedQueue = $this->client->managedQueueFromUrl($item->queueUrl);
     $startedAt = \microtime(TRUE);
     $this->metrics->queue('started', $managedQueue);
+
+    // A worker can sit idle, or be suspended by the platform, for longer than
+    // the database server keeps a connection open. A connection cannot be
+    // reopened in place, so hand the item back and exit; Laravel Cloud starts
+    // a fresh worker, which receives the item again.
+    try {
+      $this->database->query('SELECT 1');
+    }
+    catch (\Exception $e) {
+      $this->release($item, $managedQueue, $startedAt, 0);
+      throw new \RuntimeException('The database connection was lost while the worker was idle. Exiting so a new worker starts.', 0, $e);
+    }
 
     try {
       if ($item->queueName === NULL) {
