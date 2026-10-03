@@ -23,7 +23,8 @@
         "drupal/openapi_jsonapi": "^3.0",
         "drupal/s3fs": "^3.11",
         "drupal/schemata": "^1.1",
-        "drush/drush": "^13.8"
+        "drush/drush": "^13.8",
+        "symfony/dotenv": "^8.1"
     },
     "conflict": {
         "drupal/drupal": "*"
