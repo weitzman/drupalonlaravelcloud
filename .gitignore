@@ -48,6 +48,9 @@
 /public/update.php
 /web.config
 
+# Ignore local environment variables
+/.env
+
 # Ignore vendor dependencies and scripts
 /vendor
 /composer.phar

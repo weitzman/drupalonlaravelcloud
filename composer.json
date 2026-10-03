@@ -26,6 +26,11 @@
         "drush/drush": "^13.8",
         "symfony/dotenv": "^8.1"
     },
+    "autoload": {
+        "files": [
+            "load.environment.php"
+        ]
+    },
     "conflict": {
         "drupal/drupal": "*"
     },
