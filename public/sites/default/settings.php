@@ -940,7 +940,10 @@ if (getenv('LARAVEL_CLOUD')) {
     $config['s3fs.settings']['region'] = getenv('AWS_DEFAULT_REGION') ?: getenv('AWS_REGION') ?: 'auto';
     $config['s3fs.settings']['use_customhost'] = TRUE;
     $config['s3fs.settings']['hostname'] = getenv('AWS_ENDPOINT_URL') ?: getenv('AWS_ENDPOINT');
-    $config['s3fs.settings']['use_path_style_endpoint'] = TRUE;
+    // Virtual-hosted style keeps the bucket name out of public file URLs.
+    $config['s3fs.settings']['use_path_style_endpoint'] = FALSE;
+    // R2 does not implement ListObjectVersions.
+    $config['s3fs.settings']['disable_version_sync'] = TRUE;
     $config['s3fs.settings']['use_https'] = TRUE;
     $config['s3fs.settings']['use_cname'] = TRUE;
     $config['s3fs.settings']['domain'] = parse_url(getenv('AWS_URL'), PHP_URL_HOST);
