@@ -3,15 +3,22 @@
 
 /**
  * @file
- * Hands Symfony console commands to Drupal's CLI.
+ * Hands Laravel Cloud's Symfony console calls to Drupal's CLI.
  *
  * Laravel Cloud treats this project as a Symfony app, so it starts managed
- * queue workers with "php bin/console messenger:consume cloud ...". Drupal
- * provides that command through "dr" when the sm module is enabled.
+ * queue workers with "php bin/console messenger:consume cloud --queues=NAME
+ * --quiet". The laravel_cloud_queue module provides the worker as
+ * "dr laravel-cloud-queue:work", which takes the same options.
  */
 
 $root = dirname(__DIR__);
-$command = [$root . '/vendor/bin/dr', ...array_slice($argv, 1)];
+$args = array_slice($argv, 1);
+if (($args[0] ?? '') === 'messenger:consume') {
+  // Keep the options and drop the Messenger transport name.
+  $options = array_filter(array_slice($args, 1), fn (string $arg) => str_starts_with($arg, '-'));
+  $args = ['laravel-cloud-queue:work', ...$options];
+}
+$command = [$root . '/vendor/bin/dr', ...$args];
 chdir($root);
 
 // Replace this process so stop signals from the platform reach the worker.
