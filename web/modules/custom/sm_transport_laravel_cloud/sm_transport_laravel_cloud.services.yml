@@ -1,3 +1,9 @@
+parameters:
+  # Managed queue names keyed by Drupal queue name, for example
+  # { media_entity_thumbnail: media }. Unmapped Drupal queues use the default
+  # managed queue. Override in a site services YAML file.
+  sm_transport_laravel_cloud.queue_map: {}
+
 services:
   Laravel\Cloud\Symfony\Queue\ManagedQueueConfig:
     factory: ['Drupal\sm_transport_laravel_cloud\CloudEnvironment', 'managedQueueConfig']
@@ -27,5 +33,11 @@ services:
   Drupal\sm_transport_laravel_cloud\EventSubscriber\PayloadSizeSubscriber:
     arguments:
       - '@messenger.default_serializer'
+    tags:
+      - { name: event_subscriber }
+
+  Drupal\sm_transport_laravel_cloud\EventSubscriber\QueueMapSubscriber:
+    arguments:
+      - '%sm_transport_laravel_cloud.queue_map%'
     tags:
       - { name: event_subscriber }

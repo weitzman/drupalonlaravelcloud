@@ -54,7 +54,18 @@ Queue workers then run on Cloud's managed workers. Cron and
   the Cloud dashboard.
 - A message larger than 1 MiB when encoded is rejected at dispatch with an
   error naming the Drupal queue.
-- All items go to the environment's default managed queue. Dispatch a message
-  with `CloudQueueStamp` to target another queue.
+- Items go to the environment's default managed queue unless their Drupal
+  queue is mapped to another one. Each managed queue has its own workers, so
+  map a queue to give it separate memory or scaling:
+
+  ```yaml
+  parameters:
+    sm_transport_laravel_cloud.queue_map:
+      media_entity_thumbnail: media
+  ```
+
+  The managed queue must already exist in the Cloud environment; sending to
+  a missing one fails. Other Messenger messages can target a queue with
+  `CloudQueueStamp`.
 - Outside Laravel Cloud the transport is defined but not configured, so do not
   route messages to it there.
