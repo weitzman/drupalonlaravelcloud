@@ -912,9 +912,9 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
 # }
 
 $settings['config_sync_directory'] = '../config';
-if (getenv('LARAVEL_CLOUD')) {
+if ($_ENV['LARAVEL_CLOUD'] ?? null) {
   $dotenv->loadEnv('../.env');
-  $db = parse_url(getenv('DATABASE_URL'));
+  $db = parse_url($_ENV['DATABASE_URL']);
   $databases['default']['default'] = [
     'database' => ltrim($db['path'], '/'),
     'username' => $db['user'],
