@@ -912,14 +912,16 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
 # }
 
 $settings['config_sync_directory'] = '../config';
-$db = parse_url(getenv('DATABASE_URL'));
-$databases['default']['default'] = [
-  'database' => $db['path'],
-  'username' => $db['user'],
-  'password' => $db['pass'],
-  'host' => $db['host'],
-  'port' => $db['port'],
-  'driver' => 'mysql',
-  'prefix' => '',
-  'collation' => 'utf8mb4_general_ci',
-];
+if (getenv('IS_DDEV_PROJECT') == 'true') {
+  $db = parse_url(getenv('DATABASE_URL'));
+  $databases['default']['default'] = [
+    'database' => ltrim($db['path'], '/'),
+    'username' => $db['user'],
+    'password' => $db['pass'],
+    'host' => $db['host'],
+    'port' => $db['port'],
+    'driver' => 'mysql',
+    'prefix' => '',
+    'collation' => 'utf8mb4_general_ci',
+  ];
+}
