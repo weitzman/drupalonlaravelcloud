@@ -48,6 +48,15 @@
         "drupal-scaffold": {
             "locations": {
                 "web-root": "public/"
+            },
+            "file-mapping": {
+                "[project-root]/.editorconfig": false,
+                "[project-root]/.gitattributes": false,
+                "[web-root]/index.php": false,
+                "[web-root]/README.md": false,
+                "[web-root]/sites/default/default.services.yml": false,
+                "[web-root]/sites/default/default.settings.php": false,
+                "[project-root]/recipes/README.txt": false
             }
         },
         "installer-paths": {
