@@ -20,9 +20,6 @@ $command = $argv[1] ?? '';
 $cron_command = [PHP_BINARY, __DIR__ . '/vendor/bin/dr', 'system:cron'];
 $schedule = new CronExpression(getenv('DRUPAL_CRON_SCHEDULE') ?: '0 * * * *');
 
-// Temporary probe: reveals when Laravel Cloud calls the scheduler.
-fwrite(STDERR, '[artisan-probe] argv: ' . json_encode(array_slice($argv, 1)) . "\n");
-
 if ($command === 'schedule:list') {
   // The same fields as Laravel's "schedule:list --json".
   $next = $schedule->getNextRunDate('now', 0, FALSE, 'UTC');
