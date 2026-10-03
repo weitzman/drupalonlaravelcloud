@@ -1,0 +1,4 @@
+# Loaded only on Laravel Cloud when a managed queue exists; see settings.php.
+parameters:
+  sm.routing:
+    Drupal\sm\QueueInterceptor\SmLegacyDrupalQueueItem: cloud

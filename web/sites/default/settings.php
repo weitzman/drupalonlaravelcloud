@@ -948,6 +948,13 @@ if (getenv('LARAVEL_CLOUD')) {
     $config['s3fs.settings']['use_cname'] = TRUE;
     $config['s3fs.settings']['domain'] = parse_url(getenv('AWS_URL'), PHP_URL_HOST);
   }
+
+  // Send Drupal queue items to Laravel Cloud managed queues. Requires the sm
+  // and sm_transport_laravel_cloud modules to be enabled.
+  if (getenv('LARAVEL_CLOUD_MANAGED_QUEUES_CONFIG')) {
+    $settings['queue_default'] = 'Drupal\sm\QueueInterceptor\SmLegacyQueueFactory';
+    $settings['container_yamls'][] = __DIR__ . '/services.cloud-queue.yml';
+  }
 }
 else {
   // die('else');
