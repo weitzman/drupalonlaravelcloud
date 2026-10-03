@@ -3,11 +3,52 @@
 
 /**
  * @file
- * Temporary probe: reveals how Laravel Cloud's Scheduler toggle calls artisan.
+ * Presents Drupal cron to Laravel Cloud's Scheduler as a Laravel task schedule.
  *
- * Cloud looks for a Laravel task schedule through this file at deploy time.
- * This logs the arguments and fails so that they appear in the deploy log.
+ * With the Scheduler toggle on, Cloud reads the schedule at deploy time with
+ * "php artisan schedule:list --json" and runs "php artisan schedule:run". The
+ * schedule holds one task: Drupal cron, hourly unless DRUPAL_CRON_SCHEDULE
+ * holds another cron expression.
  */
 
+use Cron\CronExpression;
+
+require __DIR__ . '/vendor/autoload.php';
+
+chdir(__DIR__);
+$command = $argv[1] ?? '';
+$cron_command = [PHP_BINARY, __DIR__ . '/vendor/bin/dr', 'system:cron'];
+$schedule = new CronExpression(getenv('DRUPAL_CRON_SCHEDULE') ?: '0 * * * *');
+
+// Temporary probe: reveals when Laravel Cloud calls the scheduler.
 fwrite(STDERR, '[artisan-probe] argv: ' . json_encode(array_slice($argv, 1)) . "\n");
+
+if ($command === 'schedule:list') {
+  // The same fields as Laravel's "schedule:list --json".
+  $next = $schedule->getNextRunDate('now', 0, FALSE, 'UTC');
+  echo json_encode([
+    [
+      'expression' => $schedule->getExpression(),
+      'command' => 'php vendor/bin/dr system:cron',
+      'description' => 'Drupal cron',
+      'next_due_date' => $next->format('Y-m-d H:i:s P'),
+      'next_due_date_human' => $next->format('c'),
+      'timezone' => 'UTC',
+      'has_mutex' => FALSE,
+      'repeat_seconds' => NULL,
+    ],
+  ]) . "\n";
+  exit(0);
+}
+
+if ($command === 'schedule:run') {
+  // Like Laravel, run the task only in a minute its expression matches.
+  if (!$schedule->isDue('now', 'UTC')) {
+    exit(0);
+  }
+  passthru(implode(' ', array_map('escapeshellarg', $cron_command)), $status);
+  exit($status);
+}
+
+fwrite(STDERR, "Unsupported artisan command: $command\n");
 exit(1);
