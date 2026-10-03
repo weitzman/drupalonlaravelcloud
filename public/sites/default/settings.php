@@ -927,5 +927,5 @@ die('yesc');
   ];
 }
 else {
-  die('else');
+  // die('else');
 }
