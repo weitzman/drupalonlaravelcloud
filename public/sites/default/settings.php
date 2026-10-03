@@ -912,7 +912,7 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
 # }
 
 $settings['config_sync_directory'] = '../config';
-if (getenv('IS_DDEV_PROJECT') == 'true') {
+if (getenv('DATABASE_URL')) {
   $db = parse_url(getenv('DATABASE_URL'));
   $databases['default']['default'] = [
     'database' => ltrim($db['path'], '/'),

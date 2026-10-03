@@ -8,10 +8,6 @@
  * See COPYRIGHT.txt and LICENSE.txt files in the "core" directory.
  */
 
-use Drupal\Core\DrupalKernel;
-
-require_once 'public/autoload_runtime.php';
-
-return static function () {
-  return new DrupalKernel('prod', require 'public/autoload.php');
-};
+chdir('public');
+$_SERVER['SCRIPT_FILENAME'] = '/var/www/html/public/index.php';
+require 'index.php';
