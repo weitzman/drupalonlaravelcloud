@@ -913,6 +913,7 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
 
 $settings['config_sync_directory'] = '../config';
 if ($_ENV['LARAVEL_CLOUD'] ?? null) {
+die('yesc');
   $db = parse_url($_ENV['DATABASE_URL']);
   $databases['default']['default'] = [
     'database' => ltrim($db['path'], '/'),
