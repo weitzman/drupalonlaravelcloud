@@ -14,6 +14,9 @@ $root = dirname(__DIR__);
 $command = [$root . '/vendor/bin/dr', ...array_slice($argv, 1)];
 chdir($root);
 
+// Temporary probe: reveals what Laravel Cloud's Scheduler toggle runs.
+fwrite(STDERR, '[console-probe] argv: ' . json_encode(array_slice($argv, 1)) . "\n");
+
 // Replace this process so stop signals from the platform reach the worker.
 if (function_exists('pcntl_exec')) {
   pcntl_exec(PHP_BINARY, $command);
