@@ -912,7 +912,6 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
 # }
 
 $settings['config_sync_directory'] = '../config';
-die('no');
 if ($_ENV['LARAVEL_CLOUD'] ?? null) {
 die('yesc');
   $db = parse_url($_ENV['DATABASE_URL']);
@@ -926,4 +925,7 @@ die('yesc');
     'prefix' => '',
     'collation' => 'utf8mb4_general_ci',
   ];
+}
+else {
+  die('else');
 }
