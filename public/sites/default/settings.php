@@ -913,6 +913,8 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
 
 $settings['config_sync_directory'] = '../config';
 if (getenv('LARAVEL_CLOUD')) {
+  // Prefer an explicit secret; fall back to a value derived from the DB URL.
+  $settings['hash_salt'] = getenv('APP_SECRET') ?: hash('sha256', getenv('DATABASE_URL'));
   $db = parse_url(getenv('DATABASE_URL'));
   $databases['default']['default'] = [
     'database' => ltrim($db['path'], '/'),
