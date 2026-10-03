@@ -3,32 +3,21 @@
 
 /**
  * @file
- * Temporary probe: reveals what Laravel Cloud runs on managed queue workers.
+ * Hands Symfony console commands to Drupal's CLI.
  *
- * Cloud treats this project as a Symfony app, so it calls bin/console. This
- * logs the arguments it was given. Replace with a real launcher once the
- * worker command is known.
+ * Laravel Cloud treats this project as a Symfony app, so it starts managed
+ * queue workers with "php bin/console messenger:consume cloud ...". Drupal
+ * provides that command through "dr" when the sm module is enabled.
  */
 
-// Cloud writes some variables only to .env; the autoloader loads that file.
-require dirname(__DIR__) . '/vendor/autoload.php';
+$root = dirname(__DIR__);
+$command = [$root . '/vendor/bin/dr', ...array_slice($argv, 1)];
+chdir($root);
 
-$args = array_slice($argv, 1);
-fwrite(STDERR, '[console-probe] argv: ' . json_encode($args) . "\n");
-
-if (($args[0] ?? '') !== 'messenger:consume') {
-  exit(0);
+// Replace this process so stop signals from the platform reach the worker.
+if (function_exists('pcntl_exec')) {
+  pcntl_exec(PHP_BINARY, $command);
 }
 
-// Report which Cloud variables reach the worker, without printing values.
-foreach (['LARAVEL_CLOUD_MANAGED_QUEUES_CONFIG', 'LARAVEL_CLOUD_AGENT_SOCKET', 'LARAVEL_CLOUD_LOG_SOCKET', 'MESSENGER_TRANSPORT_DSN'] as $name) {
-  fwrite(STDERR, "[console-probe] $name: " . (getenv($name) === FALSE ? 'unset' : 'set') . "\n");
-}
-$config = json_decode((string) getenv('LARAVEL_CLOUD_MANAGED_QUEUES_CONFIG'), TRUE);
-$socket = $config['agent']['socket'] ?? getenv('LARAVEL_CLOUD_AGENT_SOCKET') ?: '/tmp/cloud-agent.sock';
-fwrite(STDERR, '[console-probe] agent enabled: ' . json_encode($config['agent']['enabled'] ?? NULL) . ', socket exists: ' . json_encode(file_exists($socket)) . "\n");
-
-// Stay alive like a real consumer so Cloud does not restart-loop the worker.
-while (TRUE) {
-  sleep(60);
-}
+passthru(implode(' ', array_map('escapeshellarg', [PHP_BINARY, ...$command])), $status);
+exit($status);
