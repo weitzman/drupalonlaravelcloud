@@ -23,3 +23,9 @@ services:
       - '@Laravel\Cloud\Symfony\Queue\ManagedQueueConfig'
     tags:
       - { name: event_subscriber }
+
+  Drupal\sm_transport_laravel_cloud\EventSubscriber\PayloadSizeSubscriber:
+    arguments:
+      - '@messenger.default_serializer'
+    tags:
+      - { name: event_subscriber }

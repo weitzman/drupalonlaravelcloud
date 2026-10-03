@@ -52,6 +52,8 @@ Queue workers then run on Cloud's managed workers. Cron and
 - Failed items are retried with the retry strategy of the `cloud` transport
   in `sm.transports` (3 retries by default), then reported as failed jobs in
   the Cloud dashboard.
+- A message larger than 1 MiB when encoded is rejected at dispatch with an
+  error naming the Drupal queue.
 - All items go to the environment's default managed queue. Dispatch a message
   with `CloudQueueStamp` to target another queue.
 - Outside Laravel Cloud the transport is defined but not configured, so do not
