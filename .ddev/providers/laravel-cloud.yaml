@@ -1,0 +1,97 @@
+# Laravel Cloud provider: pulls an environment's database into DDEV.
+#
+# Usage: ddev pull laravel-cloud
+#
+# Requirements (on the host, not in the web container):
+#   - The Laravel Cloud CLI, authenticated: `composer global require laravel/cloud-cli && cloud auth`
+#   - A git remote that matches the repository of a Laravel Cloud application.
+#     The database is the one attached to that application's environment.
+#
+# Laravel Cloud does not expose snapshots as downloadable dumps, so this dumps
+# over the cluster's public endpoint. If the endpoint is disabled, it is enabled
+# for the duration of the dump and disabled again afterwards.
+#
+# Files are not pulled; public files usually live in object storage. Suggest
+# using stage_file_proxy instead.
+#
+# Pull from a different environment with:
+#   ddev pull laravel-cloud --environment="LARAVEL_CLOUD_ENVIRONMENT=staging"
+
+environment_variables:
+  LARAVEL_CLOUD_ENVIRONMENT: production
+
+auth_command:
+  service: host
+  command: |
+    set -eu -o pipefail
+    if ! command -v cloud >/dev/null; then echo "The Laravel Cloud CLI ('cloud') is required on the host." && exit 1; fi
+    if ! cloud environment:list --json -n >/dev/null; then
+      echo "Unable to list Laravel Cloud environments for this repository. Run 'cloud auth' on the host." && exit 1
+    fi
+
+db_pull_command:
+  service: host
+  command: |
+    # set -x   # Do not enable: it would print the database password.
+    set -eu -o pipefail
+    # jq is not required on the host; use the web container's. ddev exec
+    # re-evaluates its arguments in a shell, so quote them.
+    jq() { ddev exec "jq $(printf '%q ' "$@")"; }
+    # A client option file keeps the password out of process arguments. .ddev is
+    # bind-mounted into the web container at /mnt/ddev_config.
+    cnf=.ddev/.downloads/laravel-cloud.cnf
+    cluster=""
+    enabled_public=false
+
+    cleanup() {
+      rm -f "${cnf}"
+      if [ "${enabled_public}" = "true" ]; then
+        echo "Disabling public endpoint on '${cluster}'..."
+        cloud database-cluster:update "${cluster}" --is-public=false --json -n >/dev/null
+      fi
+    }
+    trap cleanup EXIT
+
+    # Resolve the environment's attached schema, then the cluster that holds it.
+    schema_id="$(cloud environment:list --json -n | jq -r --arg env "${LARAVEL_CLOUD_ENVIRONMENT}" '.[] | select(.name == $env) | .databaseSchemaId // empty')"
+    if [ -z "${schema_id}" ]; then
+      echo "No database is attached to the '${LARAVEL_CLOUD_ENVIRONMENT}' environment." && exit 1
+    fi
+    cluster_json() {
+      cloud database-cluster:list --json --show-sensitive -n | jq -c --arg id "${schema_id}" '.[] | select(any(.schemas[]; .id == $id))'
+    }
+    info="$(cluster_json)"
+    cluster="$(jq -r '.name' <<<"${info}")"
+    schema="$(jq -r --arg id "${schema_id}" '.schemas[] | select(.id == $id) | .name' <<<"${info}")"
+    if [ "$(jq -r '.driver // .connection.driver' <<<"${info}")" != "mysql" ]; then
+      echo "Cluster '${cluster}' is not MySQL; this provider only supports MySQL." && exit 1
+    fi
+
+    if [ "$(jq -r '.config.is_public' <<<"${info}")" != "true" ]; then
+      echo "Enabling public endpoint on '${cluster}'..."
+      enabled_public=true
+      cloud database-cluster:update "${cluster}" --is-public=true --json -n >/dev/null
+      for i in $(seq 1 60); do
+        info="$(cluster_json)"
+        if [ "$(jq -r '"\(.config.is_public) \(.status)"' <<<"${info}")" = "true available" ]; then break; fi
+        sleep 5
+      done
+    fi
+
+    mkdir -p .ddev/.downloads
+    (umask 077 && jq -r '.connection | "[client]\nhost=\(.hostname)\nport=\(.port)\nuser=\(.username)\npassword=\"\(.password)\""' <<<"${info}" >"${cnf}")
+
+    # The cluster may be suspended or the endpoint still propagating; retry.
+    # --defaults-file (not --defaults-extra-file) so DDEV's ~/.my.cnf, which
+    # points at the local db container, is ignored.
+    downloads=/var/www/html/.ddev/.downloads
+    dump="set -o pipefail; mysqldump --defaults-file=/mnt/ddev_config/.downloads/laravel-cloud.cnf --single-transaction --no-tablespaces --set-gtid-purged=OFF '${schema}' | gzip >${downloads}/db.sql.gz.tmp && mv ${downloads}/db.sql.gz.tmp ${downloads}/db.sql.gz"
+    for i in $(seq 1 6); do
+      if ddev exec bash -c "${dump}"; then
+        echo "Downloaded '${schema}' from '${cluster}'."
+        exit 0
+      fi
+      echo "Dump failed (attempt ${i}); retrying in 10s..."
+      sleep 10
+    done
+    echo "Unable to dump '${schema}' from '${cluster}'." && exit 1
