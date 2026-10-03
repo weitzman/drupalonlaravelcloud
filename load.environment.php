@@ -9,5 +9,5 @@ use Symfony\Component\Dotenv\Dotenv;
 
 // Existing environment variables take precedence over values in .env.
 if (file_exists(__DIR__ . '/.env')) {
-  (new Dotenv())->load(__DIR__ . '/.env');
+  (new Dotenv())->usePutenv()->load(__DIR__ . '/.env')-;
 }
