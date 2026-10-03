@@ -24,7 +24,7 @@ services:
       - '%laravel_cloud_queue.queue_map%'
 
   Drupal\laravel_cloud_queue\Metrics:
-    arguments: ['@laravel_cloud_queue.config', '@uuid']
+    arguments: ['@laravel_cloud_queue.config']
 
   Drupal\laravel_cloud_queue\Worker:
     arguments:

@@ -9,6 +9,7 @@ use Aws\Sqs\SqsClient;
 use Drupal\Component\Uuid\UuidInterface;
 use Laravel\Cloud\Symfony\Queue\Agent\AgentClient;
 use Laravel\Cloud\Symfony\Queue\ManagedQueueConfig;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * Sends queue items to, and receives them from, Laravel Cloud managed queues.
@@ -71,7 +72,7 @@ class CloudQueueClient {
 
     // "uuid" and "displayName" are what the Cloud dashboard names a job by.
     $body = \json_encode([
-      'uuid' => $this->uuid->generate(),
+      'uuid' => (string) Uuid::v7(),
       'displayName' => $drupalQueue,
       'body' => \base64_encode(\serialize($data)),
     ], JSON_THROW_ON_ERROR);

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\laravel_cloud_queue;
 
-use Drupal\Component\Uuid\UuidInterface;
 use Laravel\Cloud\Symfony\Observability\Events;
 use Laravel\Cloud\Symfony\Queue\ManagedQueueConfig;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * Reports queue activity and failed jobs to the Laravel Cloud dashboard.
@@ -34,7 +34,6 @@ class Metrics {
 
   public function __construct(
     private readonly ManagedQueueConfig $config,
-    private readonly UuidInterface $uuid,
   ) {}
 
   /**
@@ -69,12 +68,13 @@ class Metrics {
 
     $this->emit([
       '_cloud_event' => 'failed_job',
-      'id' => $this->uuid->generate(),
+      // A time-ordered UUID, as laravel/symfony-on-cloud sends.
+      'id' => (string) Uuid::v7(),
       'queue' => $managedQueue,
       'started_at' => $this->format($startedAt),
       'attempts' => $item->attempts,
-      'payload' => \is_array($payload) ? (string) \json_encode($payload) : \substr($item->body, 0, self::MAX_BODY_BYTES),
-      'exception' => \mb_strcut((string) $exception, 0, self::MAX_EXCEPTION_BYTES, 'UTF-8'),
+      'payload' => \is_array($payload) ? (string) \json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : \substr($item->body, 0, self::MAX_BODY_BYTES),
+      'exception' => \mb_strcut((string) \mb_convert_encoding((string) $exception, 'UTF-8'), 0, self::MAX_EXCEPTION_BYTES, 'UTF-8'),
     ]);
   }
 
