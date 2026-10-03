@@ -305,7 +305,3 @@ corepack_enable: true
 #   - exec: drush sql:sanitize
 #   - exec: drush updatedb
 #   - exec: drush cache:rebuild
-hooks:
-    post-start:
-        # Mutagen syncs settings.php as owner-writable, which Drupal's status report flags.
-        - exec: chmod 444 web/sites/default/settings.php
