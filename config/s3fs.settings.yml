@@ -9,7 +9,7 @@ use_customhost: false
 hostname: ''
 domain: ''
 use_path_style_endpoint: false
-disable_version_sync: false
+disable_version_sync: true
 cache_control_header: ''
 encryption: ''
 use_https: false
