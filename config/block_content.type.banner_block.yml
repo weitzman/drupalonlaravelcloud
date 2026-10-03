@@ -1,0 +1,10 @@
+uuid: d4b5d40a-6542-4489-b125-b7e54ab82348
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: 5e4BCZPqr9acBiJlX6gfikEX3YdBUesFrCSUsYLWXbs
+id: banner_block
+label: 'Banner block'
+revision: false
+description: "A banner block contains a title, summary, link to content and a background image. The background image is scaled to fill the browser's width."
