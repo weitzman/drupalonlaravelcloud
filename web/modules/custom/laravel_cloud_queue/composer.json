@@ -1,0 +1,11 @@
+{
+    "name": "drupal/laravel_cloud_queue",
+    "description": "Runs Drupal queues on Laravel Cloud managed queues.",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=8.3",
+        "aws/aws-sdk-php": "^3.0",
+        "laravel/symfony-on-cloud": "^0.1"
+    }
+}
