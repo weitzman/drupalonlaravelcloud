@@ -5,10 +5,6 @@
 # follows official upstream conventions:
 # https://www.drupal.org/docs/develop/using-composer
 
-# Ignore configuration files that may contain sensitive information
-/public/sites/*/*settings*.php
-/public/sites/*/*services*.yml
-
 # Ignore paths that may contain user-generated content
 /public/sites/*/files
 /public/sites/*/public
