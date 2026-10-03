@@ -1,7 +1,0 @@
-name: 'Laravel Cloud Managed Queues transport'
-type: module
-description: 'Symfony Messenger transport for Laravel Cloud Managed Queues.'
-core_version_requirement: '^11.4 || ^12'
-package: Messenger
-dependencies:
-  - sm:sm

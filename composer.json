@@ -25,7 +25,6 @@
         "drupal/openapi_jsonapi": "^3.0",
         "drupal/s3fs": "^3.11",
         "drupal/schemata": "^1.1",
-        "drupal/sm": "^1.0@alpha",
         "drush/drush": "^13.8",
         "laravel/symfony-on-cloud": "^0.1.0",
         "symfony/dotenv": "^8.1",
