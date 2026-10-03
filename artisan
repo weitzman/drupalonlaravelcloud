@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * @file
+ * Temporary probe: reveals how Laravel Cloud's Scheduler toggle calls artisan.
+ *
+ * Cloud looks for a Laravel task schedule through this file at deploy time.
+ * This logs the arguments and fails so that they appear in the deploy log.
+ */
+
+fwrite(STDERR, '[artisan-probe] argv: ' . json_encode(array_slice($argv, 1)) . "\n");
+exit(1);
