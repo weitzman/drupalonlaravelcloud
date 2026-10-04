@@ -912,49 +912,11 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
 # }
 
 $settings['config_sync_directory'] = '../config';
-if (getenv('LARAVEL_CLOUD')) {
-  // Prefer an explicit secret; fall back to a value derived from the DB URL.
-  $settings['hash_salt'] = getenv('APP_SECRET') ?: hash('sha256', getenv('DATABASE_URL'));
-  $db = parse_url(getenv('DATABASE_URL'));
-  $databases['default']['default'] = [
-    'database' => ltrim($db['path'], '/'),
-    'username' => $db['user'],
-    'password' => $db['pass'],
-    'host' => $db['host'],
-    'port' => $db['port'],
-    'driver' => 'mysql',
-    'prefix' => '',
-    'collation' => 'utf8mb4_general_ci',
-  ];
+// Database, hash salt and file storage on Laravel Cloud.
+include $app_root . '/modules/custom/laravelcloud/settings.laravelcloud.php';
 
-  // Store public files in the attached object storage bucket (Cloudflare R2).
-  // AWS_URL is the bucket's public base URL; Cloud does not inject it, so it
-  // must be added as a custom environment variable.
-  if (getenv('AWS_BUCKET') && getenv('AWS_URL')) {
-    $settings['s3fs.access_key'] = getenv('AWS_ACCESS_KEY_ID');
-    $settings['s3fs.secret_key'] = getenv('AWS_SECRET_ACCESS_KEY');
-    $settings['s3fs.use_s3_for_public'] = TRUE;
-    // R2 rejects per-object ACLs; visibility is set on the bucket.
-    $settings['s3fs.upload_as_private'] = TRUE;
-    $config['s3fs.settings']['bucket'] = getenv('AWS_BUCKET');
-    $config['s3fs.settings']['region'] = getenv('AWS_DEFAULT_REGION') ?: getenv('AWS_REGION') ?: 'auto';
-    $config['s3fs.settings']['use_customhost'] = TRUE;
-    $config['s3fs.settings']['hostname'] = getenv('AWS_ENDPOINT_URL') ?: getenv('AWS_ENDPOINT');
-    // Virtual-hosted style keeps the bucket name out of public file URLs.
-    $config['s3fs.settings']['use_path_style_endpoint'] = FALSE;
-    // R2 does not implement ListObjectVersions.
-    $config['s3fs.settings']['disable_version_sync'] = TRUE;
-    $config['s3fs.settings']['use_https'] = TRUE;
-    $config['s3fs.settings']['use_cname'] = TRUE;
-    $config['s3fs.settings']['domain'] = parse_url(getenv('AWS_URL'), PHP_URL_HOST);
-  }
-
-  // Send Drupal queue items to Laravel Cloud managed queues. Requires the
-  // laravel_cloud_queue module to be enabled.
-  if (getenv('LARAVEL_CLOUD_MANAGED_QUEUES_CONFIG')) {
-    $settings['queue_default'] = 'queue.laravel_cloud';
-  }
-}
-else {
-  // die('else');
+// Send Drupal queue items to Laravel Cloud managed queues. Requires the
+// laravel_cloud_queue module to be enabled.
+if (getenv('LARAVEL_CLOUD_MANAGED_QUEUES_CONFIG')) {
+  $settings['queue_default'] = 'queue.laravel_cloud';
 }

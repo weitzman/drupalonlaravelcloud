@@ -4,7 +4,7 @@ Runs Drupal cron on [Laravel Cloud](https://cloud.laravel.com), and documents
 how to host a Drupal site there. The setup below works with an environment
 that scales to zero.
 
-The module provides one command, `dr laravelcloud:cron`. Queues are handled by
+The module provides one command, `dr lc:cron`. Queues are handled by
 the separate [laravel_cloud_queue](../laravel_cloud_queue/README.md) module.
 
 ## Project layout
@@ -22,38 +22,56 @@ the separate [laravel_cloud_queue](../laravel_cloud_queue/README.md) module.
 
 ## Settings
 
-Cloud sets `LARAVEL_CLOUD` and injects the attached resources as environment
-variables. In `settings.php`:
+Cloud injects the attached resources as environment variables. Include this
+module's settings file from `settings.php`; it does nothing off Cloud:
 
 ```php
-if (getenv('LARAVEL_CLOUD')) {
-  // Prefer an explicit secret; fall back to a value derived from the DB URL.
-  $settings['hash_salt'] = getenv('APP_SECRET') ?: hash('sha256', getenv('DATABASE_URL'));
-  $db = parse_url(getenv('DATABASE_URL'));
-  $databases['default']['default'] = [
-    'database' => ltrim($db['path'], '/'),
-    'username' => $db['user'],
-    'password' => $db['pass'],
-    'host' => $db['host'],
-    'port' => $db['port'],
-    'driver' => 'mysql',
-    'prefix' => '',
-    'collation' => 'utf8mb4_general_ci',
-  ];
+include $app_root . '/modules/custom/laravelcloud/settings.laravelcloud.php';
+```
+
+It sets:
+
+- **Database:** from `DATABASE_URL` (MySQL).
+- **Hash salt:** from `APP_SECRET` if you add that environment variable,
+  otherwise derived from `DATABASE_URL`.
+- **Files:** the s3fs settings described below, when a bucket is attached.
+
+### Site URL
+
+The module cannot do this step, because the variables must exist before Drush
+starts. Cloud provides the URL as `DEFAULT_URI` (Symfony apps) or `APP_URL`.
+Copy it to `DRUSH_OPTIONS_URI` and `DRUPAL_URL` so CLI commands, including
+cron, generate correct links. Put this in a file listed under
+`autoload.files` in the root `composer.json`; this project uses
+`load.environment.php`:
+
+```php
+if ($url = getenv('DEFAULT_URI') ?: getenv('APP_URL')) {
+  foreach (['DRUSH_OPTIONS_URI', 'DRUPAL_URL'] as $name) {
+    if (getenv($name) === FALSE) {
+      putenv("$name=$url");
+      $_ENV[$name] = $_SERVER[$name] = $url;
+    }
+  }
 }
 ```
 
-- **Site URL:** Cloud provides the URL as `DEFAULT_URI` (Symfony apps) or
-  `APP_URL`. Copy it to `DRUSH_OPTIONS_URI` and `DRUPAL_URL` so CLI commands
-  generate correct links. This project does that in `load.environment.php`,
-  autoloaded through `autoload.files` in `composer.json`.
-- **Files:** instances have no persistent disk. Attach an object storage
-  bucket and use [s3fs](https://www.drupal.org/project/s3fs) for public files.
-  Cloud injects the `AWS_*` variables except `AWS_URL`, the bucket's public
-  base URL; add that as a custom environment variable. The bucket is
-  Cloudflare R2, which needs `s3fs.upload_as_private` and
-  `disable_version_sync`. See the `s3fs` lines in this project's
-  `settings.php`.
+### Files
+
+Instances have no persistent disk, so public files go to an object storage
+bucket (Cloudflare R2) through [s3fs](https://www.drupal.org/project/s3fs):
+
+1. `composer require drupal/s3fs` and enable the module.
+2. In the Cloud dashboard, create a bucket with public visibility and attach
+   it to the environment. Cloud then injects the bucket name, endpoint and
+   credentials as `AWS_*` variables.
+3. Add the bucket's public base URL as a custom environment variable named
+   `AWS_URL`. Cloud does not inject it, and the settings file ignores the
+   bucket without it.
+
+The settings file then makes s3fs take over `public://`, serve files from the
+`AWS_URL` host, and work within R2's limits: no per-object ACLs and no object
+version listing.
 
 ## Cron
 
@@ -64,7 +82,7 @@ Uninstall `automated_cron`, then:
    with:
 
    ```bash
-   cloud background-process:create <instance> --type=custom --command='php vendor/bin/dr laravelcloud:cron'
+   cloud background-process:create <instance> --type=custom --command='php vendor/bin/dr lc:cron'
    ```
 
 3. If the environment scales to zero, enable "Wake up interval" in the App
@@ -98,7 +116,7 @@ cloud environment:logs
 ```
 
 ```bash
-cloud command:run production --cmd='vendor/bin/drush ws --type=cron'
+cloud command:run production --cmd='vendor/bin/drush watchdog:show --type=cron'
 ```
 
 ```bash

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\laravelcloud\Command;
 
 use Cron\CronExpression;
-use Drupal\Core\Database\Database;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,7 +14,7 @@ use Symfony\Component\Process\Process;
  * Runs Drupal cron on a schedule, until stopped.
  */
 #[AsCommand(
-  name: 'laravelcloud:cron',
+  name: 'lc:cron',
   description: 'Runs Drupal cron on a schedule, until stopped. For a Laravel Cloud background process.',
 )]
 class CronCommand {
@@ -27,8 +26,6 @@ class CronCommand {
   public function __invoke(OutputInterface $output): int {
     $schedule = new CronExpression(getenv('DRUPAL_CRON_SCHEDULE') ?: '0 * * * *');
     $last = (int) $this->state->get('system.cron_last');
-    // This process only waits; each cron run gets a new process and connection.
-    Database::closeConnection();
 
     while (TRUE) {
       // Run when a scheduled time has passed since the last run. That covers
