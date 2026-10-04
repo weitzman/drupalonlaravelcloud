@@ -201,6 +201,10 @@ Also define `APP_SECRET` in the automation. A preview that gets its own bucket
 uses it without further settings, but the bucket starts empty: files uploaded
 on the source environment are missing.
 
+A preview does not copy the App cluster's wake up interval; it is off, so a
+sleeping preview stays asleep until it gets a request, and cron only runs
+while it is awake.
+
 Set `DRUPAL_CRON_SCHEDULE=off` in the automation unless previews need cron.
 Cron on a preview works on a copy of the source's data and can send mail or
 call external services.
