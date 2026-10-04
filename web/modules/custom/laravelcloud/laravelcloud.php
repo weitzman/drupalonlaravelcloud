@@ -66,12 +66,10 @@ function laravelcloud_settings(array &$settings, array &$databases, array &$conf
   }
 
   // On a preview, fetch missing public files from the source environment's
-  // bucket, using stage_file_proxy and s3fs_file_proxy_to_s3. Those modules
-  // are installed by preview-deploy.php and are not in the exported config.
+  // bucket. Needs the stage_file_proxy and s3fs_file_proxy_to_s3 modules.
   if ($origin = getenv('STAGE_FILE_PROXY_ORIGIN')) {
     $config['stage_file_proxy.settings']['origin'] = rtrim($origin, '/');
     $config['stage_file_proxy.settings']['origin_dir'] = 's3fs-public';
-    $settings['config_exclude_modules'] = ['stage_file_proxy', 's3fs_file_proxy_to_s3'];
   }
 }
 

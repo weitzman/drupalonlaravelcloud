@@ -160,8 +160,9 @@ need neither the source database's credentials nor network access to it.
 
 2. Combine each key with the bucket's endpoint host and ID into a URL:
    `https://ACCESS_KEY_ID:SECRET_ACCESS_KEY@ENDPOINT_HOST/BUCKET_ID`.
-3. On the environment to copy, add the read-write URL as the custom
-   environment variable `DB_BACKUP_URL`, and upload after each deploy. With
+3. On the environment to copy (the source environment), add the read-write
+   URL as the custom environment variable `DB_BACKUP_URL`, and upload after
+   each deploy. With
    this deploy command, a failed upload does not fail the deploy:
 
    ```bash
@@ -182,8 +183,10 @@ php -r 'require "vendor/autoload.php"; [$client, $object] = laravelcloud_db_back
 ## Preview environments
 
 A preview environment copies the clusters and background processes of the
-environment it is based on, but gets a new, empty database, and only the
-variables defined in the preview automation. `drush deploy` fails on an empty
+environment it is based on, called the source environment here; usually that
+is production. It gets a new, empty database. It does not get the source
+environment's custom variables, only those defined in the preview automation.
+Below, "the automation's variables" always means the latter. `drush deploy` fails on an empty
 database, so set the automation's initial deploy command to:
 
 ```bash
@@ -206,48 +209,52 @@ preview holds the read-only URL, and the source's backup is left alone.
 Changes to an automation apply to new previews only; edit an existing
 preview's deploy command and variables in its own settings.
 
-Also define `APP_SECRET` in the automation. A preview that gets its own bucket
+Also define `APP_SECRET` in the automation's variables. A preview that gets its own bucket
 uses it without further settings, but the bucket starts empty: files uploaded
 on the source environment are missing, and their URLs return 404.
 
 ### Files from the source environment
 
-The imported database lists the source's files in s3fs's metadata table, so
-Drupal links straight to the preview bucket, which answers 404 without the
-request reaching Drupal. stage_file_proxy alone therefore never runs.
+The imported database lists the source environment's files in s3fs's metadata
+table, so Drupal links straight to the preview bucket, which answers 404
+without the request reaching Drupal. stage_file_proxy alone therefore never
+runs.
 [s3fs_file_proxy_to_s3](https://www.drupal.org/project/s3fs_file_proxy_to_s3)
 fills the gap: a file missing from the metadata table gets a URL on the site,
 and the first request copies it from the source bucket into the preview
 bucket, then redirects to it. Image style derivatives are built on the preview
 from the copied original.
 
-1. Add both modules to the project, but do not enable them or export their
-   config. Until s3fs_file_proxy_to_s3 has a release after 4.0.2, the dev
-   branch is needed for stage_file_proxy 3:
+1. Add both modules to the project, enable them and export the config, so
+   they are enabled on the source environment too. There they do nothing
+   without an origin, except that image style URLs for derivatives not yet
+   built start with `/s3fs_to_s3/files` instead of `/s3/files`. Until
+   s3fs_file_proxy_to_s3 has a release after 4.0.2, the dev branch is needed
+   for stage_file_proxy 3:
 
    ```bash
    composer require drupal/stage_file_proxy:^3 drupal/s3fs_file_proxy_to_s3:4.0.x-dev
    ```
 
-2. In the automation's variables, set `STAGE_FILE_PROXY_ORIGIN` to the base
-   URL of the source's public files, without the `s3fs-public` folder: its
-   `AWS_URL`, or `https://<AWS_BUCKET>.laravel.cloud`.
+2. In the automation's variables, not the source environment's, set
+   `STAGE_FILE_PROXY_ORIGIN` to the base URL of the source environment's
+   public files, without the `s3fs-public` folder. That is the source
+   environment's `AWS_URL` variable if it has one, otherwise
+   `https://<AWS_BUCKET>.laravel.cloud` with the source environment's bucket.
 
-`preview-deploy.php` then empties the metadata table and installs the two
-modules after importing the database, and `laravelcloud_settings()` sets the
-origin and keeps later config imports from uninstalling them. This applies to
-new previews only.
+`preview-deploy.php` then empties the metadata table after importing the
+database, and `laravelcloud_settings()` sets the origin. This applies to new
+previews only.
 
 Pages cached before a file was copied keep linking to the site URL, which
-redirects to the bucket. Tested with a local S3 emulator as the preview bucket
-and a Laravel Cloud bucket as the origin, not yet on a Cloud preview.
+redirects to the bucket.
 
 A preview does not copy the App cluster's wake up interval; it is off, so a
 sleeping preview stays asleep until it gets a request.
 
 Cron is off on a preview, because custom variables are not copied to it. To
 run cron there, add `DRUPAL_CRON_SCHEDULE` to the automation's variables. It
-then works on a copy of the source's data and can send mail or call external
+then works on a copy of the source environment's data and can send mail or call external
 services.
 
 A background process that keeps exiting takes the whole App cluster down with
