@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5b0989a06edbbc83722cb07f11489810",
+    "content-hash": "a475d519d17454f6dfa346b9bb25fea0",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1612,6 +1612,28 @@
             ],
             "description": "Cron, settings, database backups and preview deploys for Drupal on Laravel Cloud.",
             "time": "2026-10-04T20:40:22+00:00"
+        },
+        {
+            "name": "drupal/laravelcloud_queue",
+            "version": "1.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/laravelcloud_queue.git",
+                "reference": "c83b5120824245a8b4a1c227e68f1bad79e55b3d"
+            },
+            "require": {
+                "aws/aws-sdk-php": "^3.0",
+                "laravel/symfony-on-cloud": "^0.1",
+                "php": ">=8.4",
+                "symfony/uid": "^7.0 || ^8.0"
+            },
+            "default-branch": true,
+            "type": "drupal-module",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Integrates Drupal queues with Laravel Cloud managed queues.",
+            "time": "2026-10-04T23:42:37+00:00"
         },
         {
             "name": "drupal/openapi",
@@ -8508,6 +8530,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "drupal/laravelcloud": 20,
+        "drupal/laravelcloud_queue": 20,
         "drupal/s3fs_file_proxy_to_s3": 20
     },
     "prefer-stable": true,
