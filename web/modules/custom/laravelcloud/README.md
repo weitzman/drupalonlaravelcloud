@@ -140,7 +140,7 @@ variables defined in the preview automation. `drush deploy` fails on an empty
 database, so set the automation's deploy command to:
 
 ```bash
-bash web/modules/custom/laravelcloud/preview-deploy.sh
+php web/modules/custom/laravelcloud/preview-deploy.php
 ```
 
 When the database has no tables, the script fills it, then runs
