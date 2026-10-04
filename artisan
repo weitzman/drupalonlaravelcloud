@@ -6,7 +6,7 @@
  * Hands "php artisan schedule:work" to the laravelcloud module's cron command.
  *
  * Only for a Laravel Cloud background process that still uses that command.
- * New background processes call "php vendor/bin/dr lc:cron".
+ * New background processes call "vendor/bin/dr lc:cron".
  */
 
 if (($argv[1] ?? '') !== 'schedule:work') {

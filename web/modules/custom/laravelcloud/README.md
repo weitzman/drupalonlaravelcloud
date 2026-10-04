@@ -82,7 +82,7 @@ Uninstall `automated_cron`, then:
    with:
 
    ```bash
-   cloud background-process:create <instance> --type=custom --command='php vendor/bin/dr lc:cron'
+   cloud background-process:create <instance> --type=custom --command='vendor/bin/dr lc:cron'
    ```
 
 3. If the environment scales to zero, enable "Wake up interval" in the App
@@ -98,6 +98,11 @@ The background process does not keep the environment awake. It sleeps after
 the "Sleep after" timeout without HTTP requests, the wake up interval wakes it
 (observed on the clock hour), and cron runs within a minute of waking. Cron
 output appears in the environment logs.
+
+With several replicas in the App cluster, each replica runs the background
+process, so cron runs once per replica at each scheduled time. Drupal's cron
+lock prevents overlapping runs; a replica that finds cron running logs "Cron
+run failed" and waits for the next scheduled time.
 
 ### Why not Cloud's Scheduler
 
