@@ -15,7 +15,7 @@ use Symfony\Component\Process\Process;
  */
 #[AsCommand(
   name: 'lc:cron',
-  description: 'Runs Drupal cron on a schedule, until stopped. For a Laravel Cloud background process.',
+  description: 'Runs Drupal cron on the schedule in DRUPAL_CRON_SCHEDULE, until stopped. For a Laravel Cloud background process.',
 )]
 class CronCommand {
 
@@ -24,10 +24,11 @@ class CronCommand {
   ) {}
 
   public function __invoke(OutputInterface $output): int {
-    // With "off" the process idles. It must not exit: Laravel Cloud restarts a
-    // background process that exits, then stops the cluster if it keeps exiting.
-    $expression = getenv('DRUPAL_CRON_SCHEDULE') ?: '0 * * * *';
-    $schedule = $expression === 'off' ? NULL : new CronExpression($expression);
+    // Without a schedule the process idles. It must not exit: Laravel Cloud
+    // restarts a background process that exits, then stops the cluster if it
+    // keeps exiting.
+    $expression = getenv('DRUPAL_CRON_SCHEDULE');
+    $schedule = $expression ? new CronExpression($expression) : NULL;
     $last = (int) $this->state->get('system.cron_last');
 
     while (TRUE) {

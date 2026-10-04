@@ -86,23 +86,25 @@ environment variable.
 Uninstall `automated_cron`, then:
 
 1. Enable this module and deploy.
-2. Add a custom background process to the App cluster, in the dashboard or
+2. Add the schedule as a custom environment variable, for example
+   `DRUPAL_CRON_SCHEDULE=@hourly`. It takes a cron expression in UTC; quote one
+   that contains spaces, such as `"*/15 * * * *"`.
+3. Add a custom background process to the App cluster, in the dashboard or
    with:
 
    ```bash
    cloud background-process:create <instance> --type=custom --command='vendor/bin/dr lc:cron'
    ```
 
-3. If the environment scales to zero, enable "Wake up interval" in the App
+4. If the environment scales to zero, enable "Wake up interval" in the App
    cluster settings in the dashboard, for example 60 minutes. The CLI does not
    expose this setting.
 
 The command checks every minute and runs `dr system:cron` when a time in the
-schedule has passed since the last run. The schedule is hourly; set the
-`DRUPAL_CRON_SCHEDULE` environment variable to another cron expression (UTC)
-to change it. On start, the last run is read from Drupal's `system.cron_last`.
-Set it to `off` to run no cron; the process then idles, because a background
-process that exits is restarted by Cloud.
+schedule has passed since the last run. On start, the last run is read from
+Drupal's `system.cron_last`. Without `DRUPAL_CRON_SCHEDULE` it runs no cron;
+the process then idles, because a background process that exits is restarted
+by Cloud.
 
 The background process does not keep the environment awake. It sleeps after
 the "Sleep after" timeout without HTTP requests, the wake up interval wakes it
@@ -206,12 +208,12 @@ uses it without further settings, but the bucket starts empty: files uploaded
 on the source environment are missing.
 
 A preview does not copy the App cluster's wake up interval; it is off, so a
-sleeping preview stays asleep until it gets a request, and cron only runs
-while it is awake.
+sleeping preview stays asleep until it gets a request.
 
-Set `DRUPAL_CRON_SCHEDULE=off` in the automation unless previews need cron.
-Cron on a preview works on a copy of the source's data and can send mail or
-call external services.
+Cron is off on a preview, because custom variables are not copied to it. To
+run cron there, add `DRUPAL_CRON_SCHEDULE` to the automation's variables. It
+then works on a copy of the source's data and can send mail or call external
+services.
 
 A background process that keeps exiting takes the whole App cluster down with
 it, so a preview's background process commands must exist on its branch.
