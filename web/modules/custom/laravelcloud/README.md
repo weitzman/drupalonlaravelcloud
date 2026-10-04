@@ -63,6 +63,8 @@ Together these set:
 - **Site URL:** Cloud provides the URL as `DEFAULT_URI` (Symfony apps) or
   `APP_URL`. It is copied to `DRUSH_OPTIONS_URI` and `DRUPAL_URL` so CLI
   commands, including cron, generate correct links.
+- **Reverse proxy:** Cloud's proxy is trusted, so Drupal generates `https`
+  URLs and sees the visitor's IP address.
 - **Files:** the s3fs settings described below, when a bucket is attached.
 
 ### Files

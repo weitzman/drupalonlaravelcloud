@@ -43,6 +43,13 @@ function laravelcloud_settings(array &$settings, array &$databases, array &$conf
     'collation' => 'utf8mb4_general_ci',
   ];
 
+  // Requests arrive through Cloud's proxy over plain HTTP. Trust its
+  // X-Forwarded-* headers so Drupal builds https URLs and sees the client IP.
+  if (isset($_SERVER['REMOTE_ADDR'])) {
+    $settings['reverse_proxy'] = TRUE;
+    $settings['reverse_proxy_addresses'] = [$_SERVER['REMOTE_ADDR']];
+  }
+
   // Store public files in the attached object storage bucket (Cloudflare R2),
   // using the s3fs module. A public bucket is served from a host named after
   // it; set AWS_URL to use another public base URL, such as a custom domain.
