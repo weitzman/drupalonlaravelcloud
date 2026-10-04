@@ -10,7 +10,7 @@ use Aws\S3\S3Client;
 // Laravel Cloud provides the site URL as DEFAULT_URI (Symfony apps) or APP_URL.
 // Drush and dr read these names, before Drupal starts.
 if ($url = getenv('DEFAULT_URI') ?: getenv('APP_URL')) {
-  foreach (['DRUSH_OPTIONS_URI', 'DRUPAL_URL'] as $name) {
+  foreach (['DRUSH_OPTIONS_URI', 'DRUPAL_URI'] as $name) {
     if (getenv($name) === FALSE) {
       putenv("$name=$url");
       $_ENV[$name] = $_SERVER[$name] = $url;
@@ -70,13 +70,6 @@ function laravelcloud_settings(array &$settings, array &$databases, array &$conf
     $config['s3fs.settings']['use_https'] = TRUE;
     $config['s3fs.settings']['use_cname'] = TRUE;
     $config['s3fs.settings']['domain'] = parse_url(getenv('AWS_URL') ?: "https://$bucket.laravel.cloud", PHP_URL_HOST);
-  }
-
-  // On a preview, fetch missing public files from the source environment's
-  // bucket. Needs the stage_file_proxy and s3fs_file_proxy_to_s3 modules.
-  if ($origin = getenv('STAGE_FILE_PROXY_ORIGIN')) {
-    $config['stage_file_proxy.settings']['origin'] = rtrim($origin, '/');
-    $config['stage_file_proxy.settings']['origin_dir'] = 's3fs-public';
   }
 }
 

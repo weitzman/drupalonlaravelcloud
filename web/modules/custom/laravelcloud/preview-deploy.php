@@ -10,8 +10,8 @@
  * A preview starts with an empty database. When the database has no tables,
  * this imports the backup at DB_BACKUP_URL, which "dr lc:db-backup" uploads,
  * or without that variable installs Drupal from the config directory. Then it
- * runs "drush deploy". With STAGE_FILE_PROXY_ORIGIN set, it empties the s3fs
- * metadata that came with the backup, so missing files are fetched.
+ * runs "drush deploy". With a bucket attached, it also rebuilds the s3fs
+ * metadata that came with the backup from the preview's own bucket.
  */
 
 // Cloud delivers variables in .env, which the project's autoloader reads.
@@ -31,9 +31,9 @@ if (!array_filter($tables)) {
     $file = sys_get_temp_dir() . '/db.sql.gz';
     $client->getObject($object + ['SaveAs' => $file]);
     $drush('sql:query --file=' . escapeshellarg($file));
-    if (getenv('STAGE_FILE_PROXY_ORIGIN')) {
-      // The backup lists the source environment's files; this bucket has none.
-      $drush("sql:query 'TRUNCATE s3fs_file'");
+    if (getenv('AWS_BUCKET')) {
+      // The backup lists the source environment's files, not this bucket's.
+      $drush('s3fs:refresh-cache');
     }
   }
   else {
