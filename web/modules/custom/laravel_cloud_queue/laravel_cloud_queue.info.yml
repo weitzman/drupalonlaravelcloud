@@ -1,0 +1,6 @@
+name: 'Laravel Cloud Queue (old name)'
+type: module
+description: 'Empty. Renamed to laravelcloud_queue; kept for one deploy so config import can uninstall it.'
+core_version_requirement: '^11.4 || ^12'
+package: Hosting
+hidden: true
