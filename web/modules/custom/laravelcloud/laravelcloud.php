@@ -5,6 +5,8 @@
  * Early setup for a site on Laravel Cloud. Loaded by Composer's autoloader.
  */
 
+use Aws\S3\S3Client;
+
 // Laravel Cloud provides the site URL as DEFAULT_URI (Symfony apps) or APP_URL.
 // Drush and dr read these names, before Drupal starts.
 if ($url = getenv('DEFAULT_URI') ?: getenv('APP_URL')) {
@@ -62,4 +64,26 @@ function laravelcloud_settings(array &$settings, array &$databases, array &$conf
     $config['s3fs.settings']['use_cname'] = TRUE;
     $config['s3fs.settings']['domain'] = parse_url(getenv('AWS_URL') ?: "https://$bucket.laravel.cloud", PHP_URL_HOST);
   }
+}
+
+/**
+ * Returns the S3 client and object for the database backup at DB_BACKUP_URL.
+ *
+ * The URL has the form https://ACCESS_KEY:SECRET@ENDPOINT_HOST/BUCKET.
+ *
+ * @return array{\Aws\S3\S3Client, array{Bucket: string, Key: string}}
+ *   The client, and the arguments that identify the backup object.
+ */
+function laravelcloud_db_backup(): array {
+  $url = parse_url(getenv('DB_BACKUP_URL'));
+  $client = new S3Client([
+    'region' => 'auto',
+    'endpoint' => 'https://' . $url['host'],
+    'credentials' => ['key' => $url['user'], 'secret' => $url['pass']],
+    'use_path_style_endpoint' => TRUE,
+    // R2 does not accept the checksums the SDK adds by default.
+    'request_checksum_calculation' => 'when_required',
+    'response_checksum_validation' => 'when_required',
+  ]);
+  return [$client, ['Bucket' => trim($url['path'], '/'), 'Key' => 'db.sql.gz']];
 }

@@ -8,9 +8,9 @@
  * "php web/modules/custom/laravelcloud/preview-deploy.php".
  *
  * A preview starts with an empty database. When the database has no tables,
- * this copies the database at PREVIEW_SOURCE_DATABASE_URL, or without that
- * variable installs Drupal from the config directory. Then it runs
- * "drush deploy".
+ * this imports the backup at DB_BACKUP_URL, which "dr lc:db-backup" uploads,
+ * or without that variable installs Drupal from the config directory. Then it
+ * runs "drush deploy".
  */
 
 // Cloud delivers variables in .env, which the project's autoloader reads.
@@ -25,9 +25,10 @@ exec("vendor/bin/drush sql:query 'SHOW TABLES'", $tables, $status);
 $status === 0 || exit($status);
 
 if (!array_filter($tables)) {
-  if ($source = getenv('PREVIEW_SOURCE_DATABASE_URL')) {
-    $file = sys_get_temp_dir() . '/preview-source.sql';
-    $drush('sql:dump --db-url=' . escapeshellarg($source) . ' --result-file=' . escapeshellarg($file));
+  if (getenv('DB_BACKUP_URL')) {
+    [$client, $object] = laravelcloud_db_backup();
+    $file = sys_get_temp_dir() . '/db.sql.gz';
+    $client->getObject($object + ['SaveAs' => $file]);
     $drush('sql:query --file=' . escapeshellarg($file));
   }
   else {

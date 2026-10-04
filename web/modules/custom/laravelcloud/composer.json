@@ -1,10 +1,11 @@
 {
     "name": "drupal/laravelcloud",
-    "description": "Runs Drupal cron on Laravel Cloud and documents hosting a Drupal site there.",
+    "description": "Cron, settings, database backups and preview deploys for Drupal on Laravel Cloud.",
     "type": "drupal-module",
     "license": "GPL-2.0-or-later",
     "require": {
         "php": ">=8.3",
+        "aws/aws-sdk-php": "^3.337",
         "dragonmantank/cron-expression": "^3.0"
     },
     "autoload": {

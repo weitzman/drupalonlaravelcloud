@@ -4,9 +4,8 @@ Runs Drupal cron on [Laravel Cloud](https://cloud.laravel.com), and documents
 how to host a Drupal site there. The setup below works with an environment
 that scales to zero.
 
-The module provides one command, `dr lc:cron`, and a deploy script for preview
-environments. Queues are handled by
-the separate [laravel_cloud_queue](../laravel_cloud_queue/README.md) module.
+The module provides the commands `dr lc:cron` and `dr lc:db-backup`, and a
+deploy script for preview environments. Queues are handled by the separate [laravel_cloud_queue](../laravel_cloud_queue/README.md) module.
 
 ## Project layout
 
@@ -131,6 +130,48 @@ through the CLI. When on, Cloud calls
 `php artisan schedule:run` at the listed times; it never calls `bin/console`
 for scheduling, and stderr from those calls is not in the environment logs.
 
+## Database backup
+
+`dr lc:db-backup` dumps the database, gzipped and with cache, session and log
+tables empty, and uploads it to a private bucket as `db.sql.gz`, replacing the
+previous one. Preview environments and CI use it as their database, so they
+need neither the source database's credentials nor network access to it.
+
+1. Create a private bucket with two keys. Do not attach it to an environment.
+
+   ```bash
+   cloud bucket:create --name=<name> --visibility=private --allowed-origins=''
+   ```
+
+   ```bash
+   cloud bucket-key:create <bucket> --name=production --permission=read_write
+   ```
+
+   ```bash
+   cloud bucket-key:create <bucket> --name=preview-read --permission=read_only
+   ```
+
+2. Combine each key with the bucket's endpoint host and ID into a URL:
+   `https://ACCESS_KEY_ID:SECRET_ACCESS_KEY@ENDPOINT_HOST/BUCKET_ID`.
+3. On the environment to copy, add the read-write URL as the custom
+   environment variable `DB_BACKUP_URL`, and upload after each deploy. With
+   this deploy command, a failed upload does not fail the deploy:
+
+   ```bash
+   vendor/bin/drush deploy && (vendor/bin/dr lc:db-backup || true)
+   ```
+
+The backup is not sanitized: it contains user accounts and any other private
+data in the database. Give the read-only URL only to environments and people
+who may see that.
+
+To fetch the backup elsewhere, such as in CI, set `DB_BACKUP_URL` to the
+read-only URL and, after `composer install`:
+
+```bash
+php -r 'require "vendor/autoload.php"; [$client, $object] = laravelcloud_db_backup(); $client->getObject($object + ["SaveAs" => "db.sql.gz"]);'
+```
+
 ## Preview environments
 
 A preview environment copies the clusters and background processes of the
@@ -145,12 +186,8 @@ php web/modules/custom/laravelcloud/preview-deploy.php
 When the database has no tables, the script fills it, then runs
 `drush deploy`:
 
-- With `PREVIEW_SOURCE_DATABASE_URL` set in the automation's variables, it
-  copies that database. Use the `DATABASE_URL` of the environment to copy.
-  This gives every preview that database's credentials and unsanitized data.
-  Cloud does not keep the copied value current: update it when the source
-  cluster is replaced or its credentials change. Until then, new previews fail
-  at deploy and existing ones are unaffected.
+- With `DB_BACKUP_URL` set in the automation's variables, it imports the
+  [database backup](#database-backup). Use the read-only URL.
 - Without it, it runs `drush site:install --existing-config`. That does not
   work for an install profile that implements `hook_install()`, such as
   `demo_umami`.
@@ -160,8 +197,7 @@ preview's deploy command and variables in its own settings.
 
 Also define `APP_SECRET` in the automation. A preview that gets its own bucket
 uses it without further settings, but the bucket starts empty: files uploaded
-on the source environment are missing. Without a bucket, public files are on
-the instance's disk and are lost on each deploy.
+on the source environment are missing.
 
 A background process that keeps exiting takes the whole App cluster down with
 it, so a preview's background process commands must exist on its branch.
