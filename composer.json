@@ -34,7 +34,6 @@
     },
     "autoload": {
         "files": [
-            "load.environment.php",
             "web/modules/custom/laravelcloud/laravelcloud.php"
         ]
     },
