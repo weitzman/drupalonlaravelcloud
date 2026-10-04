@@ -14,6 +14,11 @@
  * "schedule:run" at the times in the listed schedule. The schedule is therefore
  * listed as every minute, and "schedule:run" decides whether cron is due. A run
  * that was missed while asleep then happens within a minute of waking.
+ *
+ * Cloud does not allow the Scheduler on an environment that scales to zero.
+ * There, run "php artisan schedule:work" as a background process and set the
+ * App cluster's wake up interval, so cron also runs when the site has no
+ * traffic.
  */
 
 use Cron\CronExpression;
@@ -59,6 +64,15 @@ if ($command === 'schedule:run') {
   touch($marker);
   passthru(implode(' ', array_map('escapeshellarg', $cron_command)), $status);
   exit($status);
+}
+
+if ($command === 'schedule:work') {
+  // Like Laravel, call "schedule:run" every minute until stopped.
+  $run = implode(' ', array_map('escapeshellarg', [PHP_BINARY, __FILE__, 'schedule:run']));
+  while (TRUE) {
+    passthru($run);
+    sleep(60);
+  }
 }
 
 fwrite(STDERR, "Unsupported artisan command: $command\n");
