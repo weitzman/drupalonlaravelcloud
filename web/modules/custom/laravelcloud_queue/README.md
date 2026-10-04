@@ -7,7 +7,7 @@ when an item arrives.
 
 ## Features
 
-- A queue backend, `queue.laravel_cloud`, for all queues or for selected
+- A queue backend, `queue.laravelcloud`, for all queues or for selected
   ones. Queue worker plugins need no changes.
 - A worker command, `dr lc:queue-work`, that Cloud's managed
   workers run.
@@ -42,8 +42,8 @@ when an item arrives.
 
    ```php
    if (getenv('LARAVEL_CLOUD_MANAGED_QUEUES_CONFIG')) {
-     $settings['queue_default'] = 'queue.laravel_cloud';
-     // Or: $settings['queue_service_MY_QUEUE'] = 'queue.laravel_cloud';
+     $settings['queue_default'] = 'queue.laravelcloud';
+     // Or: $settings['queue_service_MY_QUEUE'] = 'queue.laravelcloud';
    }
    ```
 
