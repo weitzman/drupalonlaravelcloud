@@ -17,6 +17,19 @@ the separate [laravel_cloud_queue](../laravel_cloud_queue/README.md) module.
   root `composer.json` requires `symfony/framework-bundle` at the time the
   Cloud application is created. Managed queues depend on this; see
   laravel_cloud_queue.
+- **`.env`:** Cloud writes the variables for attached resources and your
+  custom variables to `.env` in the project root; they are not in the process
+  environment. Load the file from a script listed under `autoload.files` in
+  the root `composer.json`, before this module's `laravelcloud.php`:
+
+  ```php
+  if (file_exists(__DIR__ . '/.env')) {
+    (new \Symfony\Component\Dotenv\Dotenv())->usePutenv()->load(__DIR__ . '/.env');
+  }
+  ```
+
+  A value that Dotenv cannot parse, such as one with a stray quote, stops
+  every PHP command.
 - **Build command:**
   `composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader`
 - **Deploy command:** `vendor/bin/drush deploy`
@@ -164,8 +177,13 @@ cloud command:run production --cmd='vendor/bin/drush watchdog:show --type=cron'
 cloud instance:list --json
 ```
 
-The CLI does not show build or deploy logs; `deployment:get` and
-`deploy:monitor` return only a status. Read those logs in the dashboard.
+For a failed deploy, the output of the deploy command is in `failureReason`:
+
+```bash
+cloud deployment:get <deployment> --json
+```
+
+Other build and deploy logs are only in the dashboard.
 
 ## Local development
 

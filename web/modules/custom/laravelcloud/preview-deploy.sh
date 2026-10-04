@@ -12,8 +12,11 @@ drush=vendor/bin/drush
 
 tables=$($drush sql:query 'SHOW TABLES')
 if [ -z "$tables" ]; then
-  if [ -n "${PREVIEW_SOURCE_DATABASE_URL:-}" ]; then
-    $drush sql:dump --db-url="$PREVIEW_SOURCE_DATABASE_URL" | $drush sql:cli
+  # Cloud delivers variables in .env, not the process environment. PHP sees
+  # them once the project's autoloader has read that file.
+  source=$(php -r 'require "vendor/autoload.php"; echo getenv("PREVIEW_SOURCE_DATABASE_URL");')
+  if [ -n "$source" ]; then
+    $drush sql:dump --db-url="$source" | $drush sql:cli
   else
     $drush site:install --existing-config --yes
   fi
