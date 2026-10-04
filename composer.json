@@ -25,7 +25,7 @@
         "drupal/core-project-message": "^11.4",
         "drupal/core-recipe-unpack": "^11.4",
         "drupal/core-recommended": "^11.4",
-        "drupal/laravelcloud": "dev-main",
+        "drupal/laravelcloud": "1.x-dev",
         "drupal/openapi_jsonapi": "^3.0",
         "drupal/s3fs": "^3.11",
         "drupal/s3fs_file_proxy_to_s3": "4.0.x-dev",

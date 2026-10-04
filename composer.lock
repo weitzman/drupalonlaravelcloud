@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a4a94e4453e4e64051a596b3911cf8e",
+    "content-hash": "5b0989a06edbbc83722cb07f11489810",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1589,7 +1589,7 @@
         },
         {
             "name": "drupal/laravelcloud",
-            "version": "dev-main",
+            "version": "1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/laravelcloud.git",
@@ -1601,7 +1601,6 @@
                 "php": ">=8.3",
                 "symfony/dotenv": "^7.3 || ^8.0"
             },
-            "default-branch": true,
             "type": "drupal-module",
             "autoload": {
                 "files": [
