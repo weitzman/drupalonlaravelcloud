@@ -22,39 +22,35 @@ the separate [laravel_cloud_queue](../laravel_cloud_queue/README.md) module.
 
 ## Settings
 
-Cloud injects the attached resources as environment variables. Include this
-module's settings file from `settings.php`; it does nothing off Cloud:
+Cloud injects the attached resources as environment variables. Two steps make
+Drupal read them; neither has any effect off Cloud.
 
-```php
-include $app_root . '/modules/custom/laravelcloud/settings.laravelcloud.php';
-```
+1. Have Composer load the module's `laravelcloud.php`. A module installed with
+   Composer does this itself. For a copy committed to the project, add the
+   file to the root `composer.json` and run `composer dump-autoload`:
 
-It sets:
+   ```json
+   "autoload": {
+       "files": ["web/modules/custom/laravelcloud/laravelcloud.php"]
+   }
+   ```
+
+2. Call its function at the end of `settings.php`:
+
+   ```php
+   laravelcloud_settings($settings, $databases, $config);
+   ```
+
+Together these set:
 
 - **Database:** from `DATABASE_URL` (MySQL).
-- **Hash salt:** from `APP_SECRET` if you add that environment variable,
-  otherwise derived from `DATABASE_URL`.
+- **Hash salt:** from `APP_SECRET`. Cloud does not define it for the
+  environment; add it as a custom environment variable. Without it, the salt
+  is derived from `DATABASE_URL`.
+- **Site URL:** Cloud provides the URL as `DEFAULT_URI` (Symfony apps) or
+  `APP_URL`. It is copied to `DRUSH_OPTIONS_URI` and `DRUPAL_URL` so CLI
+  commands, including cron, generate correct links.
 - **Files:** the s3fs settings described below, when a bucket is attached.
-
-### Site URL
-
-The module cannot do this step, because the variables must exist before Drush
-starts. Cloud provides the URL as `DEFAULT_URI` (Symfony apps) or `APP_URL`.
-Copy it to `DRUSH_OPTIONS_URI` and `DRUPAL_URL` so CLI commands, including
-cron, generate correct links. Put this in a file listed under
-`autoload.files` in the root `composer.json`; this project uses
-`load.environment.php`:
-
-```php
-if ($url = getenv('DEFAULT_URI') ?: getenv('APP_URL')) {
-  foreach (['DRUSH_OPTIONS_URI', 'DRUPAL_URL'] as $name) {
-    if (getenv($name) === FALSE) {
-      putenv("$name=$url");
-      $_ENV[$name] = $_SERVER[$name] = $url;
-    }
-  }
-}
-```
 
 ### Files
 
@@ -66,10 +62,10 @@ bucket (Cloudflare R2) through [s3fs](https://www.drupal.org/project/s3fs):
    it to the environment. Cloud then injects the bucket name, endpoint and
    credentials as `AWS_*` variables.
 3. Add the bucket's public base URL as a custom environment variable named
-   `AWS_URL`. Cloud does not inject it, and the settings file ignores the
-   bucket without it.
+   `AWS_URL`. Cloud does not inject it, and the bucket is ignored without
+   it.
 
-The settings file then makes s3fs take over `public://`, serve files from the
+`laravelcloud_settings()` then makes s3fs take over `public://`, serve files from the
 `AWS_URL` host, and work within R2's limits: no per-object ACLs and no object
 version listing.
 
@@ -99,10 +95,18 @@ the "Sleep after" timeout without HTTP requests, the wake up interval wakes it
 (observed on the clock hour), and cron runs within a minute of waking. Cron
 output appears in the environment logs.
 
-With several replicas in the App cluster, each replica runs the background
-process, so cron runs once per replica at each scheduled time. Drupal's cron
-lock prevents overlapping runs; a replica that finds cron running logs "Cron
-run failed" and waits for the next scheduled time.
+### Several replicas
+
+Cloud runs a background process on every replica of its cluster. On an App
+cluster with several replicas, cron therefore runs once per replica at each
+scheduled time. Drupal's cron lock prevents overlapping runs, but not runs
+that follow each other.
+
+For an App cluster that autoscales, put the background process on a Worker
+cluster with a single replica instead. Cloud's documentation recommends an
+always-awake worker cluster for Symfony scheduled tasks; no wake up interval
+is needed then. Autoscaling and worker clusters depend on the Cloud plan. This
+arrangement has not been tested with this module.
 
 ### Why not Cloud's Scheduler
 

@@ -913,7 +913,7 @@ if (getenv('IS_DDEV_PROJECT') == 'true' && file_exists(__DIR__ . '/settings.ddev
 
 $settings['config_sync_directory'] = '../config';
 // Database, hash salt and file storage on Laravel Cloud.
-include $app_root . '/modules/custom/laravelcloud/settings.laravelcloud.php';
+laravelcloud_settings($settings, $databases, $config);
 
 // Send Drupal queue items to Laravel Cloud managed queues. Requires the
 // laravel_cloud_queue module to be enabled.

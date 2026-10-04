@@ -32,7 +32,8 @@
     },
     "autoload": {
         "files": [
-            "load.environment.php"
+            "load.environment.php",
+            "web/modules/custom/laravelcloud/laravelcloud.php"
         ]
     },
     "conflict": {
