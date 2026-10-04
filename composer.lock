@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "923d38ad65b7ae5aed074963a04abd50",
+    "content-hash": "5b0989a06edbbc83722cb07f11489810",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1586,6 +1586,32 @@
                 "source": "https://github.com/drupal/core-recommended/tree/11.4.8"
             },
             "time": "2026-09-26T20:35:18+00:00"
+        },
+        {
+            "name": "drupal/laravelcloud",
+            "version": "1.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/laravelcloud.git",
+                "reference": "54028b1e20c2c8f5ec3304ec47490fc509b7094a"
+            },
+            "require": {
+                "aws/aws-sdk-php": "^3.337",
+                "dragonmantank/cron-expression": "^3.0",
+                "php": ">=8.3",
+                "symfony/dotenv": "^7.3 || ^8.0"
+            },
+            "type": "drupal-module",
+            "autoload": {
+                "files": [
+                    "laravelcloud.php"
+                ]
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Cron, settings, database backups and preview deploys for Drupal on Laravel Cloud.",
+            "time": "2026-10-04T20:40:22+00:00"
         },
         {
             "name": "drupal/openapi",
@@ -8481,6 +8507,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "drupal/laravelcloud": 20,
         "drupal/s3fs_file_proxy_to_s3": 20
     },
     "prefer-stable": true,
