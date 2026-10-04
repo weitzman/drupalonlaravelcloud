@@ -231,10 +231,11 @@ and the first request copies it from the source bucket into the preview
 bucket, then redirects to it. Image style derivatives are built on the preview
 from the copied original.
 
+This is optional. A site without preview environments, or one that accepts
+missing files on them, needs neither module.
+
 1. Add both modules to the project, enable them and export the config, so
-   they are enabled on the source environment too. There they do nothing
-   without an origin, except that image style URLs for derivatives not yet
-   built start with `/s3fs_to_s3/files` instead of `/s3/files`. Until
+   they are enabled on the source environment too. Until
    s3fs_file_proxy_to_s3 has a release after 4.0.2, the dev branch is needed
    for stage_file_proxy 3:
 
@@ -242,15 +243,20 @@ from the copied original.
    composer require drupal/stage_file_proxy:^3 drupal/s3fs_file_proxy_to_s3:4.0.x-dev
    ```
 
-2. In the automation's variables, not the source environment's, set
-   `STAGE_FILE_PROXY_ORIGIN` to the base URL of the source environment's
-   public files, without the `s3fs-public` folder. That is the source
-   environment's `AWS_URL` variable if it has one, otherwise
+2. In the exported `stage_file_proxy.settings`, set `origin_dir` to
+   `s3fs-public` and `origin` to the base URL of the source environment's
+   public files, without that folder. That is the source environment's
+   `AWS_URL` variable if it has one, otherwise
    `https://<AWS_BUCKET>.laravel.cloud` with the source environment's bucket.
+   Local development uses the same config.
 
-`preview-deploy.php` then empties the metadata table after importing the
-database, and `laravelcloud_settings()` sets the origin. This applies to new
-previews only.
+No variable is needed. After importing the database, `preview-deploy.php`
+rebuilds the metadata table from the preview's bucket.
+
+On the source environment the origin is its own bucket, so nothing is copied.
+The only changes there: image style URLs for derivatives not yet built start
+with `/s3fs_to_s3/files` instead of `/s3/files`, and a request for a file
+that does not exist checks the bucket once more before returning 404.
 
 Pages cached before a file was copied keep linking to the site URL, which
 redirects to the bucket.
@@ -298,4 +304,6 @@ ddev pull laravel-cloud
 ```
 
 It needs the `cloud` CLI, authenticated, on the host. Files are not pulled;
-use [stage_file_proxy](https://www.drupal.org/project/stage_file_proxy).
+use [stage_file_proxy](https://www.drupal.org/project/stage_file_proxy) with
+the origin described under
+[Files from the source environment](#files-from-the-source-environment).

@@ -1,6 +1,6 @@
 hotlink: false
-origin: ''
-origin_dir: ''
+origin: 'https://fls-a2e4d137-5d5c-48ad-8b37-31d0418a5c6d.laravel.cloud'
+origin_dir: s3fs-public
 proxy_headers: ''
 use_imagecache_root: true
 verify: true

@@ -71,13 +71,6 @@ function laravelcloud_settings(array &$settings, array &$databases, array &$conf
     $config['s3fs.settings']['use_cname'] = TRUE;
     $config['s3fs.settings']['domain'] = parse_url(getenv('AWS_URL') ?: "https://$bucket.laravel.cloud", PHP_URL_HOST);
   }
-
-  // On a preview, fetch missing public files from the source environment's
-  // bucket. Needs the stage_file_proxy and s3fs_file_proxy_to_s3 modules.
-  if ($origin = getenv('STAGE_FILE_PROXY_ORIGIN')) {
-    $config['stage_file_proxy.settings']['origin'] = rtrim($origin, '/');
-    $config['stage_file_proxy.settings']['origin_dir'] = 's3fs-public';
-  }
 }
 
 /**
