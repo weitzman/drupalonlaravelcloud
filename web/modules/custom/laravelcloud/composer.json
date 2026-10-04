@@ -1,0 +1,10 @@
+{
+    "name": "drupal/laravelcloud",
+    "description": "Runs Drupal cron on Laravel Cloud and documents hosting a Drupal site there.",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=8.3",
+        "dragonmantank/cron-expression": "^3.0"
+    }
+}
