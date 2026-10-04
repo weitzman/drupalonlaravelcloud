@@ -9,7 +9,7 @@ when an item arrives.
 
 - A queue backend, `queue.laravel_cloud`, for all queues or for selected
   ones. Queue worker plugins need no changes.
-- A worker command, `dr laravel-cloud-queue:work`, that Cloud's managed
+- A worker command, `dr lc:queue-work`, that Cloud's managed
   workers run.
 - Failed items are retried with a doubling delay, then listed under failed
   jobs in the Cloud dashboard.
@@ -32,7 +32,7 @@ when an item arrives.
    $args = array_slice($argv, 1);
    if (($args[0] ?? '') === 'messenger:consume') {
      $options = array_filter(array_slice($args, 1), fn (string $arg) => str_starts_with($arg, '-'));
-     $args = ['laravel-cloud-queue:work', ...$options];
+     $args = ['lc:queue-work', ...$options];
    }
    chdir($root);
    pcntl_exec(PHP_BINARY, [$root . '/vendor/bin/dr', ...$args]);

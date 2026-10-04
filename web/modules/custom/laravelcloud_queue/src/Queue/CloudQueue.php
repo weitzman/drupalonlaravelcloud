@@ -12,7 +12,7 @@ use Drupal\laravelcloud_queue\Metrics;
  * A Drupal queue stored in a Laravel Cloud managed queue.
  *
  * Items are processed by Laravel Cloud's managed workers through the
- * "laravel-cloud-queue:work" command, which receives from the managed queue
+ * "lc:queue-work" command, which receives from the managed queue
  * and runs the matching queue worker plugin. Items cannot be claimed by
  * Drupal queue name because several Drupal queues may share one managed
  * queue, so cron and "drush queue:run" find nothing to do.

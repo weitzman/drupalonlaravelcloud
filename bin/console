@@ -8,7 +8,7 @@
  * Laravel Cloud treats this project as a Symfony app, so it starts managed
  * queue workers with "php bin/console messenger:consume cloud --queues=NAME
  * --quiet". The laravelcloud_queue module provides the worker as
- * "dr laravel-cloud-queue:work", which takes the same options.
+ * "dr lc:queue-work", which takes the same options.
  */
 
 $root = dirname(__DIR__);
@@ -16,7 +16,7 @@ $args = array_slice($argv, 1);
 if (($args[0] ?? '') === 'messenger:consume') {
   // Keep the options and drop the Messenger transport name.
   $options = array_filter(array_slice($args, 1), fn (string $arg) => str_starts_with($arg, '-'));
-  $args = ['laravel-cloud-queue:work', ...$options];
+  $args = ['lc:queue-work', ...$options];
 }
 $command = [$root . '/vendor/bin/dr', ...$args];
 chdir($root);

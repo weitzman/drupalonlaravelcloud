@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Processes Drupal queue items from a Laravel Cloud managed queue.
  */
 #[AsCommand(
-  name: 'laravel-cloud-queue:work',
+  name: 'lc:queue-work',
   description: 'Processes Drupal queue items from a Laravel Cloud managed queue.',
 )]
 class WorkCommand extends Command {
