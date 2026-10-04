@@ -27,7 +27,7 @@ environments. Works with an environment that scales to zero.
 - Deploy command: `vendor/bin/drush deploy`
 - Cloud writes environment variables to `.env` in the project root, not to
   the process environment. Load it from a script listed under
-  `autoload.files` in the root `composer.json`:
+  `autoload.files` in the site's `composer.json`:
 
   ```php
   if (file_exists(__DIR__ . '/.env')) {
@@ -156,29 +156,11 @@ first request:
    `origin` to the source environment's `AWS_URL`, or
    `https://<AWS_BUCKET>.laravel.cloud` with its bucket.
 
-### Checking on an environment
-
-```bash
-cloud environment:logs
-```
-
-```bash
-cloud command:run production --cmd='vendor/bin/drush watchdog:show --type=cron'
-```
-
-For a failed deploy, see `failureReason` in:
-
-```bash
-cloud deployment:get <deployment> --json
-```
-
 ## Additional Requirements
 
-- Drupal 11.4 or later, PHP 8.3 or later
 - [Drush](https://www.drush.org)
 - A Laravel Cloud application and the
   [`cloud` CLI](https://cloud.laravel.com/docs)
-- `aws/aws-sdk-php` and `dragonmantank/cron-expression`, installed by Composer
 
 ## Recommended modules/libraries
 
