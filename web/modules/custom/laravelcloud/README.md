@@ -73,15 +73,14 @@ bucket (Cloudflare R2) through [s3fs](https://www.drupal.org/project/s3fs):
 
 1. `composer require drupal/s3fs` and enable the module.
 2. In the Cloud dashboard, create a bucket with public visibility and attach
-   it to the environment. Cloud then injects the bucket name, endpoint and
-   credentials as `AWS_*` variables.
-3. Add the bucket's public base URL as a custom environment variable named
-   `AWS_URL`. Cloud does not inject it, and the bucket is ignored without
-   it.
+   it to the environment. Cloud then writes the bucket name, endpoint and
+   credentials to `.env` as `AWS_*` variables.
 
 `laravelcloud_settings()` then makes s3fs take over `public://`, serve files from the
-`AWS_URL` host, and work within R2's limits: no per-object ACLs and no object
-version listing.
+bucket's public host (`https://<AWS_BUCKET>.laravel.cloud`), and work within
+R2's limits: no per-object ACLs and no object version listing. To serve files
+from another base URL, such as a custom domain, set `AWS_URL` as a custom
+environment variable.
 
 ## Cron
 
@@ -159,9 +158,13 @@ When the database has no tables, the script fills it, then runs
 Changes to an automation apply to new previews only; edit an existing
 preview's deploy command and variables in its own settings.
 
-Also define `APP_SECRET` in the automation, and `AWS_URL` if a bucket is
-attached. Without a bucket, public files are on the instance's disk and are
-lost on each deploy.
+Also define `APP_SECRET` in the automation. A preview that gets its own bucket
+uses it without further settings, but the bucket starts empty: files uploaded
+on the source environment are missing. Without a bucket, public files are on
+the instance's disk and are lost on each deploy.
+
+A background process that keeps exiting takes the whole App cluster down with
+it, so a preview's background process commands must exist on its branch.
 
 ## Checking on an environment
 

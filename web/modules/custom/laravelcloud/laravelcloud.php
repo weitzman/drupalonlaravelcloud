@@ -42,15 +42,15 @@ function laravelcloud_settings(array &$settings, array &$databases, array &$conf
   ];
 
   // Store public files in the attached object storage bucket (Cloudflare R2),
-  // using the s3fs module. AWS_URL is the bucket's public base URL; Cloud does
-  // not inject it, so it must be added as a custom environment variable.
-  if (getenv('AWS_BUCKET') && getenv('AWS_URL')) {
+  // using the s3fs module. A public bucket is served from a host named after
+  // it; set AWS_URL to use another public base URL, such as a custom domain.
+  if ($bucket = getenv('AWS_BUCKET')) {
     $settings['s3fs.access_key'] = getenv('AWS_ACCESS_KEY_ID');
     $settings['s3fs.secret_key'] = getenv('AWS_SECRET_ACCESS_KEY');
     $settings['s3fs.use_s3_for_public'] = TRUE;
     // R2 rejects per-object ACLs; visibility is set on the bucket.
     $settings['s3fs.upload_as_private'] = TRUE;
-    $config['s3fs.settings']['bucket'] = getenv('AWS_BUCKET');
+    $config['s3fs.settings']['bucket'] = $bucket;
     $config['s3fs.settings']['region'] = getenv('AWS_DEFAULT_REGION') ?: getenv('AWS_REGION') ?: 'auto';
     $config['s3fs.settings']['use_customhost'] = TRUE;
     $config['s3fs.settings']['hostname'] = getenv('AWS_ENDPOINT_URL') ?: getenv('AWS_ENDPOINT');
@@ -60,6 +60,6 @@ function laravelcloud_settings(array &$settings, array &$databases, array &$conf
     $config['s3fs.settings']['disable_version_sync'] = TRUE;
     $config['s3fs.settings']['use_https'] = TRUE;
     $config['s3fs.settings']['use_cname'] = TRUE;
-    $config['s3fs.settings']['domain'] = parse_url(getenv('AWS_URL'), PHP_URL_HOST);
+    $config['s3fs.settings']['domain'] = parse_url(getenv('AWS_URL') ?: "https://$bucket.laravel.cloud", PHP_URL_HOST);
   }
 }
