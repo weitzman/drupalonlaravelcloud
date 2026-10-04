@@ -9,6 +9,9 @@
  * "php artisan schedule:list --json" and runs "php artisan schedule:run". The
  * schedule holds one task: Drupal cron, hourly unless DRUPAL_CRON_SCHEDULE
  * holds another cron expression.
+ *
+ * Cloud does not wake a sleeping environment for the task, so a run that was
+ * missed while asleep happens on the first "schedule:run" after waking.
  */
 
 use Cron\CronExpression;
@@ -39,10 +42,15 @@ if ($command === 'schedule:list') {
 }
 
 if ($command === 'schedule:run') {
-  // Like Laravel, run the task only in a minute its expression matches.
-  if (!$schedule->isDue('now', 'UTC')) {
+  // Run when a scheduled time has passed since the last run on this instance.
+  // That covers the current minute and a time missed while asleep. A new
+  // instance has no marker, so cron also runs once after each deployment.
+  $marker = sys_get_temp_dir() . '/drupal-cron-last-run';
+  $last_run = file_exists($marker) ? filemtime($marker) : 0;
+  if ($last_run >= $schedule->getPreviousRunDate('now', 0, TRUE, 'UTC')->getTimestamp()) {
     exit(0);
   }
+  touch($marker);
   passthru(implode(' ', array_map('escapeshellarg', $cron_command)), $status);
   exit($status);
 }
