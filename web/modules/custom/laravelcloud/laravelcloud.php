@@ -6,6 +6,15 @@
  */
 
 use Aws\S3\S3Client;
+use Composer\InstalledVersions;
+use Symfony\Component\Dotenv\Dotenv;
+
+// Laravel Cloud writes its variables to .env in the project root, not to the
+// process environment. Existing environment variables take precedence.
+$env_file = InstalledVersions::getRootPackage()['install_path'] . '/.env';
+if (file_exists($env_file)) {
+  (new Dotenv())->usePutenv()->load($env_file);
+}
 
 // Laravel Cloud provides the site URL as DEFAULT_URI (Symfony apps) or APP_URL.
 // Drush and dr read these names, before Drupal starts.
