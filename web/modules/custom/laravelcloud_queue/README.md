@@ -1,6 +1,6 @@
 # Laravel Cloud Queue
 
-Runs Drupal queues on
+Integrates Drupal queues with
 [Laravel Cloud managed queues](https://laravel.com/cloud/docs/queues). Cloud's
 managed workers process the items, scale with the backlog and wake from zero
 when an item arrives.
@@ -21,22 +21,10 @@ when an item arrives.
 
 ## Post-Installation
 
-1. Add `bin/console` to the project root. Cloud starts workers with
-   `php bin/console messenger:consume cloud --queues=NAME --quiet`; this
-   passes that call to the module's command:
-
-   ```php
-   #!/usr/bin/env php
-   <?php
-   $root = dirname(__DIR__);
-   $args = array_slice($argv, 1);
-   if (($args[0] ?? '') === 'messenger:consume') {
-     $options = array_filter(array_slice($args, 1), fn (string $arg) => str_starts_with($arg, '-'));
-     $args = ['lc:queue-work', ...$options];
-   }
-   chdir($root);
-   pcntl_exec(PHP_BINARY, [$root . '/vendor/bin/dr', ...$args]);
-   ```
+1. Copy the module's `console` file to `bin/console` in the project root.
+   Cloud starts workers with
+   `php bin/console messenger:consume cloud --queues=NAME --quiet`; the file
+   passes that call to the module's command.
 
 2. With the module enabled, select the backend in `settings.php`:
 
@@ -55,7 +43,7 @@ find nothing to claim.
 
 ### Options
 
-Set these parameters in a site services YAML file:
+To override the defaults, set these parameters in a site services YAML file:
 
 | Parameter | Default | Purpose |
 | --- | --- | --- |
@@ -72,18 +60,11 @@ parameters:
     media_entity_thumbnail: media
 ```
 
-### Limits
-
-- `createItem()` throws an exception for an item larger than 1 MiB when
-  encoded.
-- `numberOfItems()` is the approximate number of waiting items in the
-  managed queue, including items of other Drupal queues that share it.
-
 ## Additional Requirements
 
 - Cloud must detect the project as a Symfony app. It does when the site's
-  `composer.json` requires `symfony/framework-bundle` at the time the Cloud
-  application is created.
+  `composer.json` requires `symfony/framework-bundle` at the time the
+  **Cloud application is created**.
 - A managed queue in the Cloud environment.
 
 ## Recommended modules/libraries
