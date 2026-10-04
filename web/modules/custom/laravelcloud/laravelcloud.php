@@ -43,6 +43,13 @@ function laravelcloud_settings(array &$settings, array &$databases, array &$conf
     'collation' => 'utf8mb4_general_ci',
   ];
 
+  // Requests arrive through Cloud's proxy over plain HTTP. Trust its
+  // X-Forwarded-* headers so Drupal builds https URLs and sees the client IP.
+  if (isset($_SERVER['REMOTE_ADDR'])) {
+    $settings['reverse_proxy'] = TRUE;
+    $settings['reverse_proxy_addresses'] = [$_SERVER['REMOTE_ADDR']];
+  }
+
   // Store public files in the attached object storage bucket (Cloudflare R2),
   // using the s3fs module. A public bucket is served from a host named after
   // it; set AWS_URL to use another public base URL, such as a custom domain.
@@ -63,6 +70,13 @@ function laravelcloud_settings(array &$settings, array &$databases, array &$conf
     $config['s3fs.settings']['use_https'] = TRUE;
     $config['s3fs.settings']['use_cname'] = TRUE;
     $config['s3fs.settings']['domain'] = parse_url(getenv('AWS_URL') ?: "https://$bucket.laravel.cloud", PHP_URL_HOST);
+  }
+
+  // On a preview, fetch missing public files from the source environment's
+  // bucket. Needs the stage_file_proxy and s3fs_file_proxy_to_s3 modules.
+  if ($origin = getenv('STAGE_FILE_PROXY_ORIGIN')) {
+    $config['stage_file_proxy.settings']['origin'] = rtrim($origin, '/');
+    $config['stage_file_proxy.settings']['origin_dir'] = 's3fs-public';
   }
 }
 
