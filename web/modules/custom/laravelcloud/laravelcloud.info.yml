@@ -1,0 +1,5 @@
+name: 'Laravel Cloud'
+type: module
+description: 'Cron, settings, database backups and preview deploys for Drupal on Laravel Cloud.'
+core_version_requirement: '^11.4 || ^12'
+package: Hosting
