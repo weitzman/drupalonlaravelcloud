@@ -261,6 +261,12 @@ that does not exist checks the bucket once more before returning 404.
 Pages cached before a file was copied keep linking to the site URL, which
 redirects to the bucket.
 
+The first view of a page on a new preview builds all its derivatives at once,
+and on a small instance some image requests time out; a reload gets them. With
+`use_imagecache_root: false` in `stage_file_proxy.settings`, the preview copies
+the source environment's derivatives instead of building them, but a
+derivative the source has not built returns 404.
+
 A preview does not copy the App cluster's wake up interval; it is off, so a
 sleeping preview stays asleep until it gets a request.
 
