@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\laravel_cloud_queue\Queue;
+namespace Drupal\laravelcloud_queue\Queue;
 
 use Drupal\Core\Queue\ReliableQueueInterface;
-use Drupal\laravel_cloud_queue\CloudQueueClient;
-use Drupal\laravel_cloud_queue\Metrics;
+use Drupal\laravelcloud_queue\CloudQueueClient;
+use Drupal\laravelcloud_queue\Metrics;
 
 /**
  * A Drupal queue stored in a Laravel Cloud managed queue.

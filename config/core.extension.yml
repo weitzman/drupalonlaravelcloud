@@ -24,8 +24,8 @@ module:
   image: 0
   jsonapi: 0
   language: 0
-  laravel_cloud_queue: 0
   laravelcloud: 0
+  laravelcloud_queue: 0
   layout_builder: 0
   layout_discovery: 0
   link: 0

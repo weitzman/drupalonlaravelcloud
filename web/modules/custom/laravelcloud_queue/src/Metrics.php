@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\laravel_cloud_queue;
+namespace Drupal\laravelcloud_queue;
 
 use Laravel\Cloud\Symfony\Observability\Events;
 use Laravel\Cloud\Symfony\Queue\ManagedQueueConfig;

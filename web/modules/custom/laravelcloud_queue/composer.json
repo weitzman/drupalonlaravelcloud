@@ -1,5 +1,5 @@
 {
-    "name": "drupal/laravel_cloud_queue",
+    "name": "drupal/laravelcloud_queue",
     "description": "Runs Drupal queues on Laravel Cloud managed queues.",
     "type": "drupal-module",
     "license": "GPL-2.0-or-later",

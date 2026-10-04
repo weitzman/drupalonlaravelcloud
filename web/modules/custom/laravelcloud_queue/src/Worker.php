@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\laravel_cloud_queue;
+namespace Drupal\laravelcloud_queue;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Queue\DelayedRequeueException;

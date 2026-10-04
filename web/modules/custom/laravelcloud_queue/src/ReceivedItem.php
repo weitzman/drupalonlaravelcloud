@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\laravel_cloud_queue;
+namespace Drupal\laravelcloud_queue;
 
 /**
  * A queue item received from a managed queue.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\laravel_cloud_queue;
+namespace Drupal\laravelcloud_queue;
 
 use Aws\Credentials\CredentialProvider;
 use Aws\Sqs\SqsClient;
@@ -98,7 +98,7 @@ class CloudQueueClient {
    *   The managed queue to read when not on Laravel Cloud. There, the agent is
    *   bound to the worker's own queue and this is ignored.
    *
-   * @return \Drupal\laravel_cloud_queue\ReceivedItem|null
+   * @return \Drupal\laravelcloud_queue\ReceivedItem|null
    *   The item, or NULL if none arrived before the wait ended.
    */
   public function receive(?string $managedQueue = NULL): ?ReceivedItem {

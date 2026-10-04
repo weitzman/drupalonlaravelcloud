@@ -1,0 +1,50 @@
+parameters:
+  # Managed queue names keyed by Drupal queue name, for example
+  # { media_entity_thumbnail: media }. Unmapped Drupal queues use the default
+  # managed queue. Override in a site services YAML file.
+  laravelcloud_queue.queue_map: {}
+  # How many times an item is attempted before it is recorded as a failed job.
+  laravelcloud_queue.max_tries: 4
+  # Seconds to wait before the first retry. Doubles with each attempt.
+  laravelcloud_queue.backoff: 1
+
+services:
+  # Set $settings['queue_default'] = 'queue.laravel_cloud' to use this backend.
+  queue.laravel_cloud:
+    class: Drupal\laravelcloud_queue\Queue\CloudQueueFactory
+    arguments: ['@Drupal\laravelcloud_queue\CloudQueueClient', '@Drupal\laravelcloud_queue\Metrics']
+    tags:
+      - { name: queue_factory }
+
+  Drupal\laravelcloud_queue\CloudQueueClient:
+    arguments:
+      - '@laravelcloud_queue.config'
+      - '@laravelcloud_queue.agent'
+      - '@uuid'
+      - '%laravelcloud_queue.queue_map%'
+
+  Drupal\laravelcloud_queue\Metrics:
+    arguments: ['@laravelcloud_queue.config']
+
+  Drupal\laravelcloud_queue\Worker:
+    arguments:
+      - '@Drupal\laravelcloud_queue\CloudQueueClient'
+      - '@plugin.manager.queue_worker'
+      - '@Drupal\laravelcloud_queue\Metrics'
+      - '@logger.channel.laravelcloud_queue'
+      - '@database'
+      - '%laravelcloud_queue.max_tries%'
+      - '%laravelcloud_queue.backoff%'
+
+  logger.channel.laravelcloud_queue:
+    parent: logger.channel_base
+    arguments: ['laravelcloud_queue']
+
+  # Read from the variables Laravel Cloud injects, when first used.
+  laravelcloud_queue.config:
+    class: Laravel\Cloud\Symfony\Queue\ManagedQueueConfig
+    factory: ['Drupal\laravelcloud_queue\CloudQueueClient', 'configFromEnvironment']
+
+  laravelcloud_queue.agent:
+    class: Laravel\Cloud\Symfony\Queue\Agent\AgentClient
+    arguments: ['@laravelcloud_queue.config']

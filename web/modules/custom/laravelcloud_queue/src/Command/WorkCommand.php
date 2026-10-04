@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\laravel_cloud_queue\Command;
+namespace Drupal\laravelcloud_queue\Command;
 
-use Drupal\laravel_cloud_queue\Worker;
+use Drupal\laravelcloud_queue\Worker;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

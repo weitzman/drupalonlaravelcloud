@@ -7,7 +7,7 @@
  *
  * Laravel Cloud treats this project as a Symfony app, so it starts managed
  * queue workers with "php bin/console messenger:consume cloud --queues=NAME
- * --quiet". The laravel_cloud_queue module provides the worker as
+ * --quiet". The laravelcloud_queue module provides the worker as
  * "dr laravel-cloud-queue:work", which takes the same options.
  */
 
