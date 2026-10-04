@@ -65,6 +65,10 @@ Together these set:
   commands, including cron, generate correct links.
 - **Reverse proxy:** Cloud's proxy is trusted, so Drupal generates `https`
   URLs and sees the visitor's IP address.
+- **Trusted hosts:** not set, because an environment can have several
+  domains. Cloud rejects requests for other hosts before they reach Drupal.
+  To clear the status report warning, set `$settings['trusted_host_patterns']`
+  in `settings.php`.
 - **Files:** the s3fs settings described below, when a bucket is attached.
 
 ### Files
