@@ -136,9 +136,15 @@ When the database has no tables, the script fills it, then runs
 - With `PREVIEW_SOURCE_DATABASE_URL` set in the automation's variables, it
   copies that database. Use the `DATABASE_URL` of the environment to copy.
   This gives every preview that database's credentials and unsanitized data.
+  Cloud does not keep the copied value current: update it when the source
+  cluster is replaced or its credentials change. Until then, new previews fail
+  at deploy and existing ones are unaffected.
 - Without it, it runs `drush site:install --existing-config`. That does not
   work for an install profile that implements `hook_install()`, such as
   `demo_umami`.
+
+Changes to an automation apply to new previews only; edit an existing
+preview's deploy command and variables in its own settings.
 
 Also define `APP_SECRET` in the automation, and `AWS_URL` if a bucket is
 attached. Without a bucket, public files are on the instance's disk and are
