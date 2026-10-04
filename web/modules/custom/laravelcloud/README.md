@@ -179,7 +179,7 @@ php -r 'require "vendor/autoload.php"; [$client, $object] = laravelcloud_db_back
 A preview environment copies the clusters and background processes of the
 environment it is based on, but gets a new, empty database, and only the
 variables defined in the preview automation. `drush deploy` fails on an empty
-database, so set the automation's deploy command to:
+database, so set the automation's initial deploy command to:
 
 ```bash
 php web/modules/custom/laravelcloud/preview-deploy.php
@@ -193,6 +193,10 @@ When the database has no tables, the script fills it, then runs
 - Without it, it runs `drush site:install --existing-config`. That does not
   work for an install profile that implements `hook_install()`, such as
   `demo_umami`.
+
+Later deploys of the preview use the source environment's deploy command. If
+that includes `dr lc:db-backup`, the upload is refused there because the
+preview holds the read-only URL, and the source's backup is left alone.
 
 Changes to an automation apply to new previews only; edit an existing
 preview's deploy command and variables in its own settings.
