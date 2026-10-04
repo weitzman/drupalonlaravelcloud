@@ -10,7 +10,7 @@ use Aws\S3\S3Client;
 // Laravel Cloud provides the site URL as DEFAULT_URI (Symfony apps) or APP_URL.
 // Drush and dr read these names, before Drupal starts.
 if ($url = getenv('DEFAULT_URI') ?: getenv('APP_URL')) {
-  foreach (['DRUSH_OPTIONS_URI', 'DRUPAL_URL'] as $name) {
+  foreach (['DRUSH_OPTIONS_URI', 'DRUPAL_URI'] as $name) {
     if (getenv($name) === FALSE) {
       putenv("$name=$url");
       $_ENV[$name] = $_SERVER[$name] = $url;

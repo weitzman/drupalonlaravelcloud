@@ -61,7 +61,7 @@ Together these set:
   environment; add it as a custom environment variable. Without it, the salt
   is derived from `DATABASE_URL`.
 - **Site URL:** Cloud provides the URL as `DEFAULT_URI` (Symfony apps) or
-  `APP_URL`. It is copied to `DRUSH_OPTIONS_URI` and `DRUPAL_URL` so CLI
+  `APP_URL`. It is copied to `DRUSH_OPTIONS_URI` and `DRUPAL_URI` so CLI
   commands, including cron, generate correct links.
 - **Reverse proxy:** Cloud's proxy is trusted, so Drupal generates `https`
   URLs and sees the visitor's IP address.
