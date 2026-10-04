@@ -25,15 +25,6 @@ environments. Works with an environment that scales to zero.
 - Build command:
   `composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader`
 - Deploy command: `vendor/bin/drush deploy`
-- Cloud writes environment variables to `.env` in the project root, not to
-  the process environment. Load it from a script listed under
-  `autoload.files` in the site's `composer.json`:
-
-  ```php
-  if (file_exists(__DIR__ . '/.env')) {
-    (new \Symfony\Component\Dotenv\Dotenv())->usePutenv()->load(__DIR__ . '/.env');
-  }
-  ```
 
 ### Settings
 
