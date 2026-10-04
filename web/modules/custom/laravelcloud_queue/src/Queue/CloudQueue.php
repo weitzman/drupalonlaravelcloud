@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Drupal\laravel_cloud_queue\Queue;
+namespace Drupal\laravelcloud_queue\Queue;
 
 use Drupal\Core\Queue\ReliableQueueInterface;
-use Drupal\laravel_cloud_queue\CloudQueueClient;
-use Drupal\laravel_cloud_queue\Metrics;
+use Drupal\laravelcloud_queue\CloudQueueClient;
+use Drupal\laravelcloud_queue\Metrics;
 
 /**
  * A Drupal queue stored in a Laravel Cloud managed queue.
  *
  * Items are processed by Laravel Cloud's managed workers through the
- * "laravel-cloud-queue:work" command, which receives from the managed queue
+ * "lc:queue-work" command, which receives from the managed queue
  * and runs the matching queue worker plugin. Items cannot be claimed by
  * Drupal queue name because several Drupal queues may share one managed
  * queue, so cron and "drush queue:run" find nothing to do.
@@ -37,7 +37,7 @@ class CloudQueue implements ReliableQueueInterface {
   /**
    * {@inheritdoc}
    *
-   * This is the approximate number of waiting messages in the managed queue,
+   * This is the approximate number of waiting items in the managed queue,
    * which includes items of any other Drupal queues that share it.
    */
   public function numberOfItems() {

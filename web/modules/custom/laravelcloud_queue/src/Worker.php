@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\laravel_cloud_queue;
+namespace Drupal\laravelcloud_queue;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Queue\DelayedRequeueException;
@@ -38,8 +38,6 @@ class Worker {
   /**
    * Processes items until a limit is reached or the worker is stopped.
    *
-   * @param string|null $managedQueue
-   *   The managed queue to read when not on Laravel Cloud.
    * @param int $limit
    *   Stop after this many items. 0 for no limit.
    * @param int $timeLimit
@@ -50,7 +48,7 @@ class Worker {
    * @return int
    *   The number of items received.
    */
-  public function run(?string $managedQueue = NULL, int $limit = 0, int $timeLimit = 0, int $memoryLimit = 0): int {
+  public function run(int $limit = 0, int $timeLimit = 0, int $memoryLimit = 0): int {
     $end = $timeLimit > 0 ? \time() + $timeLimit : NULL;
     $count = 0;
 
@@ -58,7 +56,7 @@ class Worker {
       && ($limit === 0 || $count < $limit)
       && ($end === NULL || \time() < $end)
       && ($memoryLimit === 0 || \memory_get_usage(TRUE) < $memoryLimit * 1024 * 1024)) {
-      if ($item = $this->client->receive($managedQueue)) {
+      if ($item = $this->client->receive()) {
         $this->process($item);
         $count++;
       }

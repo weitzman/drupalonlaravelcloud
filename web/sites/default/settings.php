@@ -916,7 +916,7 @@ $settings['config_sync_directory'] = '../config';
 laravelcloud_settings($settings, $databases, $config);
 
 // Send Drupal queue items to Laravel Cloud managed queues. Requires the
-// laravel_cloud_queue module to be enabled.
+// laravelcloud_queue module to be enabled.
 if (getenv('LARAVEL_CLOUD_MANAGED_QUEUES_CONFIG')) {
-  $settings['queue_default'] = 'queue.laravel_cloud';
+  $settings['queue_default'] = 'queue.laravelcloud';
 }

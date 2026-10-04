@@ -5,10 +5,12 @@
  * @file
  * Hands Laravel Cloud's Symfony console calls to Drupal's CLI.
  *
- * Laravel Cloud treats this project as a Symfony app, so it starts managed
+ * Copy this file to bin/console in the project root.
+ *
+ * Laravel Cloud treats the project as a Symfony app, so it starts managed
  * queue workers with "php bin/console messenger:consume cloud --queues=NAME
- * --quiet". The laravelcloud_queue module provides the worker as
- * "dr lc:queue-work", which takes the same options.
+ * --quiet". This module provides the worker as "dr lc:queue-work", which
+ * takes the same options.
  */
 
 $root = dirname(__DIR__);

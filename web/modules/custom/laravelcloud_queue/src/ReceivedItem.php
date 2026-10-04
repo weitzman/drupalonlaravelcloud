@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\laravel_cloud_queue;
+namespace Drupal\laravelcloud_queue;
 
 /**
  * A queue item received from a managed queue.
@@ -16,8 +16,6 @@ final class ReceivedItem {
    *   The SQS receipt handle.
    * @param string $queueUrl
    *   The URL of the SQS queue the message came from.
-   * @param bool $fromAgent
-   *   Whether the Cloud agent delivered the message.
    * @param int $attempts
    *   How many times the message has been delivered, including this time.
    * @param string $body
@@ -31,7 +29,6 @@ final class ReceivedItem {
     public readonly string $messageId,
     public readonly ?string $receiptHandle,
     public readonly string $queueUrl,
-    public readonly bool $fromAgent,
     public readonly int $attempts,
     public readonly string $body,
     public readonly ?string $queueName,

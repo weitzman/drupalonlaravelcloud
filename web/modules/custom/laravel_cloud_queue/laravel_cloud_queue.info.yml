@@ -1,5 +1,6 @@
-name: 'Laravel Cloud Queue'
+name: 'Laravel Cloud Queue (old name)'
 type: module
-description: 'Runs Drupal queues on Laravel Cloud managed queues.'
+description: 'Empty. Renamed to laravelcloud_queue; kept for one deploy so config import can uninstall it.'
 core_version_requirement: '^11.4 || ^12'
 package: Hosting
+hidden: true
