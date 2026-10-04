@@ -165,7 +165,7 @@ class CloudQueueClient {
   }
 
   /**
-   * Returns the approximate number of waiting messages in a managed queue.
+   * Returns the approximate number of waiting items in a managed queue.
    */
   public function count(string $managedQueue): int {
     $attributes = $this->sqs()->getQueueAttributes([

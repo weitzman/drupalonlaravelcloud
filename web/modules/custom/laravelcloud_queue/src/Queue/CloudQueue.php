@@ -37,7 +37,7 @@ class CloudQueue implements ReliableQueueInterface {
   /**
    * {@inheritdoc}
    *
-   * This is the approximate number of waiting messages in the managed queue,
+   * This is the approximate number of waiting items in the managed queue,
    * which includes items of any other Drupal queues that share it.
    */
   public function numberOfItems() {

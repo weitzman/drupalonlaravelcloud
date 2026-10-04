@@ -76,7 +76,7 @@ parameters:
 
 - `createItem()` throws an exception for an item larger than 1 MiB when
   encoded.
-- `numberOfItems()` is the approximate number of waiting messages in the
+- `numberOfItems()` is the approximate number of waiting items in the
   managed queue, including items of other Drupal queues that share it.
 
 ## Additional Requirements
