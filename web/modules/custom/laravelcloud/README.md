@@ -4,7 +4,8 @@ Runs Drupal cron on [Laravel Cloud](https://cloud.laravel.com), and documents
 how to host a Drupal site there. The setup below works with an environment
 that scales to zero.
 
-The module provides one command, `dr lc:cron`. Queues are handled by
+The module provides one command, `dr lc:cron`, and a deploy script for preview
+environments. Queues are handled by
 the separate [laravel_cloud_queue](../laravel_cloud_queue/README.md) module.
 
 ## Project layout
@@ -117,6 +118,31 @@ through the CLI. When on, Cloud calls
 `php artisan schedule:list --json --timezone=UTC` at deploy and
 `php artisan schedule:run` at the listed times; it never calls `bin/console`
 for scheduling, and stderr from those calls is not in the environment logs.
+
+## Preview environments
+
+A preview environment copies the clusters and background processes of the
+environment it is based on, but gets a new, empty database, and only the
+variables defined in the preview automation. `drush deploy` fails on an empty
+database, so set the automation's deploy command to:
+
+```bash
+bash web/modules/custom/laravelcloud/preview-deploy.sh
+```
+
+When the database has no tables, the script fills it, then runs
+`drush deploy`:
+
+- With `PREVIEW_SOURCE_DATABASE_URL` set in the automation's variables, it
+  copies that database. Use the `DATABASE_URL` of the environment to copy.
+  This gives every preview that database's credentials and unsanitized data.
+- Without it, it runs `drush site:install --existing-config`. That does not
+  work for an install profile that implements `hook_install()`, such as
+  `demo_umami`.
+
+Also define `APP_SECRET` in the automation, and `AWS_URL` if a bucket is
+attached. Without a bucket, public files are on the instance's disk and are
+lost on each deploy.
 
 ## Checking on an environment
 
