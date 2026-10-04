@@ -25,7 +25,7 @@ class WorkCommand {
 
   public function __invoke(
     OutputInterface $output,
-    #[Option(description: 'The managed queue to read. Ignored on Laravel Cloud, which assigns each worker its queue.', name: 'queues')]
+    #[Option(description: 'Ignored. Laravel Cloud passes it, but assigns each worker its queue.', name: 'queues')]
     ?string $queues = NULL,
     #[Option(description: 'Stop after this many items.', name: 'limit')]
     int $limit = 0,
@@ -42,7 +42,7 @@ class WorkCommand {
       }
     }
 
-    $count = $this->worker->run($queues, $limit, $timeLimit, $memoryLimit);
+    $count = $this->worker->run($limit, $timeLimit, $memoryLimit);
     $output->writeln(\sprintf('Processed %d items.', $count));
 
     return Command::SUCCESS;

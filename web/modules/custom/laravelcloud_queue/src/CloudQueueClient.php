@@ -14,10 +14,9 @@ use Symfony\Component\Uid\Uuid;
 /**
  * Sends queue items to, and receives them from, Laravel Cloud managed queues.
  *
- * Sending always goes to SQS. On Laravel Cloud, receiving goes through the
- * agent that runs beside each worker: it hands over the next message and
- * performs the SQS delete or visibility change once told the outcome. Without
- * the agent, such as in local development, this talks to SQS for both.
+ * Sending goes to SQS. Receiving goes through the agent that Laravel Cloud
+ * runs beside each worker: it hands over the next message and performs the SQS
+ * delete or visibility change once told the outcome.
  */
 class CloudQueueClient {
 
@@ -92,48 +91,22 @@ class CloudQueueClient {
   }
 
   /**
-   * Waits for the next item.
-   *
-   * @param string|null $managedQueue
-   *   The managed queue to read. Ignored on Laravel Cloud, which assigns each
-   *   worker its queue.
+   * Waits for the next item of the managed queue this worker is assigned to.
    *
    * @return \Drupal\laravelcloud_queue\ReceivedItem|null
    *   The item, or NULL if none arrived before the wait ended.
    */
-  public function receive(?string $managedQueue = NULL): ?ReceivedItem {
-    if ($this->config->agentAvailable()) {
-      $message = $this->agent->next();
-      if (!\is_string($message['messageId'] ?? NULL) || $message['messageId'] === '') {
-        return NULL;
-      }
-      return $this->item(
-        $message['messageId'],
-        \is_string($message['receiptHandle'] ?? NULL) ? $message['receiptHandle'] : NULL,
-        \is_string($message['queueUrl'] ?? NULL) && $message['queueUrl'] !== '' ? $message['queueUrl'] : (string) $this->config->queueUrl,
-        TRUE,
-        (array) ($message['attributes'] ?? []),
-        \is_string($message['body'] ?? NULL) ? $message['body'] : '',
-      );
-    }
-
-    $queueUrl = $this->queueUrl($managedQueue ?? $this->config->queue);
-    $message = $this->sqs()->receiveMessage([
-      'QueueUrl' => $queueUrl,
-      'MaxNumberOfMessages' => 1,
-      'WaitTimeSeconds' => 20,
-      'AttributeNames' => ['ApproximateReceiveCount'],
-    ])->get('Messages')[0] ?? NULL;
-    if ($message === NULL) {
+  public function receive(): ?ReceivedItem {
+    $message = $this->agent->next();
+    if (!\is_string($message['messageId'] ?? NULL) || $message['messageId'] === '') {
       return NULL;
     }
     return $this->item(
-      (string) ($message['MessageId'] ?? ''),
-      isset($message['ReceiptHandle']) ? (string) $message['ReceiptHandle'] : NULL,
-      $queueUrl,
-      FALSE,
-      (array) ($message['Attributes'] ?? []),
-      (string) ($message['Body'] ?? ''),
+      $message['messageId'],
+      \is_string($message['receiptHandle'] ?? NULL) ? $message['receiptHandle'] : NULL,
+      \is_string($message['queueUrl'] ?? NULL) && $message['queueUrl'] !== '' ? $message['queueUrl'] : (string) $this->config->queueUrl,
+      (array) ($message['attributes'] ?? []),
+      \is_string($message['body'] ?? NULL) ? $message['body'] : '',
     );
   }
 
@@ -141,27 +114,14 @@ class CloudQueueClient {
    * Removes a finished item from its queue.
    */
   public function delete(ReceivedItem $item): void {
-    if ($item->fromAgent) {
-      $this->agent->report($item->messageId, $item->receiptHandle, 'processed');
-      return;
-    }
-    $this->sqs()->deleteMessage(['QueueUrl' => $item->queueUrl, 'ReceiptHandle' => $item->receiptHandle]);
+    $this->agent->report($item->messageId, $item->receiptHandle, 'processed');
   }
 
   /**
    * Returns an item to its queue, to be delivered again after a delay.
    */
   public function release(ReceivedItem $item, int $delay): void {
-    $delay = \max(0, \min(self::MAX_VISIBILITY, $delay));
-    if ($item->fromAgent) {
-      $this->agent->report($item->messageId, $item->receiptHandle, 'released', $delay);
-      return;
-    }
-    $this->sqs()->changeMessageVisibility([
-      'QueueUrl' => $item->queueUrl,
-      'ReceiptHandle' => $item->receiptHandle,
-      'VisibilityTimeout' => $delay,
-    ]);
+    $this->agent->report($item->messageId, $item->receiptHandle, 'released', \max(0, \min(self::MAX_VISIBILITY, $delay)));
   }
 
   /**
@@ -182,7 +142,7 @@ class CloudQueueClient {
     return $this->config->normalizeQueue($queueUrl);
   }
 
-  private function item(string $messageId, ?string $receiptHandle, string $queueUrl, bool $fromAgent, array $attributes, string $body): ReceivedItem {
+  private function item(string $messageId, ?string $receiptHandle, string $queueUrl, array $attributes, string $body): ReceivedItem {
     // A message this module did not send has no queue name and fails in the
     // worker like any other item.
     $decoded = \json_decode($body, TRUE);
@@ -193,7 +153,6 @@ class CloudQueueClient {
       $messageId,
       $receiptHandle,
       $queueUrl,
-      $fromAgent,
       \max(1, (int) ($attributes['ApproximateReceiveCount'] ?? 1)),
       $body,
       $valid ? $decoded['displayName'] : NULL,
