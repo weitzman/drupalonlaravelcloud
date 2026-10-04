@@ -10,8 +10,10 @@
  * schedule holds one task: Drupal cron, hourly unless DRUPAL_CRON_SCHEDULE
  * holds another cron expression.
  *
- * Cloud does not wake a sleeping environment for the task, so a run that was
- * missed while asleep happens on the first "schedule:run" after waking.
+ * Cloud does not wake a sleeping environment for the task, and only calls
+ * "schedule:run" at the times in the listed schedule. The schedule is therefore
+ * listed as every minute, and "schedule:run" decides whether cron is due. A run
+ * that was missed while asleep then happens within a minute of waking.
  */
 
 use Cron\CronExpression;
@@ -25,10 +27,10 @@ $schedule = new CronExpression(getenv('DRUPAL_CRON_SCHEDULE') ?: '0 * * * *');
 
 if ($command === 'schedule:list') {
   // The same fields as Laravel's "schedule:list --json".
-  $next = $schedule->getNextRunDate('now', 0, FALSE, 'UTC');
+  $next = (new CronExpression('* * * * *'))->getNextRunDate('now', 0, FALSE, 'UTC');
   echo json_encode([
     [
-      'expression' => $schedule->getExpression(),
+      'expression' => '* * * * *',
       'command' => 'php vendor/bin/dr system:cron',
       'description' => 'Drupal cron',
       'next_due_date' => $next->format('Y-m-d H:i:s P'),
@@ -42,12 +44,16 @@ if ($command === 'schedule:list') {
 }
 
 if ($command === 'schedule:run') {
-  // Run when a scheduled time has passed since the last run on this instance.
-  // That covers the current minute and a time missed while asleep. A new
-  // instance has no marker, so cron also runs once after each deployment.
+  // Run when a scheduled time has passed since the last run. That covers the
+  // current minute and a time missed while asleep. The marker file avoids
+  // starting Drupal every minute; without one, ask Drupal for the last run.
   $marker = sys_get_temp_dir() . '/drupal-cron-last-run';
-  $last_run = file_exists($marker) ? filemtime($marker) : 0;
-  if ($last_run >= $schedule->getPreviousRunDate('now', 0, TRUE, 'UTC')->getTimestamp()) {
+  if (!file_exists($marker)) {
+    $drush = escapeshellarg(__DIR__ . '/vendor/bin/drush');
+    preg_match('/(\d+)\s*$/', (string) shell_exec("$drush state:get system.cron_last 2>/dev/null"), $matches);
+    touch($marker, (int) ($matches[1] ?? 0));
+  }
+  if (filemtime($marker) >= $schedule->getPreviousRunDate('now', 0, TRUE, 'UTC')->getTimestamp()) {
     exit(0);
   }
   touch($marker);
