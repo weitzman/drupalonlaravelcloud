@@ -101,6 +101,8 @@ The command checks every minute and runs `dr system:cron` when a time in the
 schedule has passed since the last run. The schedule is hourly; set the
 `DRUPAL_CRON_SCHEDULE` environment variable to another cron expression (UTC)
 to change it. On start, the last run is read from Drupal's `system.cron_last`.
+Set it to `off` to run no cron; the process then idles, because a background
+process that exits is restarted by Cloud.
 
 The background process does not keep the environment awake. It sleeps after
 the "Sleep after" timeout without HTTP requests, the wake up interval wakes it
@@ -198,6 +200,10 @@ preview's deploy command and variables in its own settings.
 Also define `APP_SECRET` in the automation. A preview that gets its own bucket
 uses it without further settings, but the bucket starts empty: files uploaded
 on the source environment are missing.
+
+Set `DRUPAL_CRON_SCHEDULE=off` in the automation unless previews need cron.
+Cron on a preview works on a copy of the source's data and can send mail or
+call external services.
 
 A background process that keeps exiting takes the whole App cluster down with
 it, so a preview's background process commands must exist on its branch.
