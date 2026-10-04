@@ -95,8 +95,8 @@ class CloudQueueClient {
    * Waits for the next item.
    *
    * @param string|null $managedQueue
-   *   The managed queue to read when not on Laravel Cloud. There, the agent is
-   *   bound to the worker's own queue and this is ignored.
+   *   The managed queue to read. Ignored on Laravel Cloud, which assigns each
+   *   worker its queue.
    *
    * @return \Drupal\laravelcloud_queue\ReceivedItem|null
    *   The item, or NULL if none arrived before the wait ended.

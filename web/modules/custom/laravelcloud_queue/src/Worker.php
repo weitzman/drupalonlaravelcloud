@@ -39,7 +39,8 @@ class Worker {
    * Processes items until a limit is reached or the worker is stopped.
    *
    * @param string|null $managedQueue
-   *   The managed queue to read when not on Laravel Cloud.
+   *   The managed queue to read. Ignored on Laravel Cloud, which assigns each
+   *   worker its queue.
    * @param int $limit
    *   Stop after this many items. 0 for no limit.
    * @param int $timeLimit
