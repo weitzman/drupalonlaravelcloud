@@ -81,6 +81,9 @@ R2's limits: no per-object ACLs and no object version listing. To serve files
 from another base URL, such as a custom domain, set `AWS_URL` as a custom
 environment variable.
 
+A preview environment's bucket starts empty; see
+[Files from the source environment](#files-from-the-source-environment).
+
 ## Cron
 
 Uninstall `automated_cron`, then:
@@ -205,7 +208,39 @@ preview's deploy command and variables in its own settings.
 
 Also define `APP_SECRET` in the automation. A preview that gets its own bucket
 uses it without further settings, but the bucket starts empty: files uploaded
-on the source environment are missing.
+on the source environment are missing, and their URLs return 404.
+
+### Files from the source environment
+
+The imported database lists the source's files in s3fs's metadata table, so
+Drupal links straight to the preview bucket, which answers 404 without the
+request reaching Drupal. stage_file_proxy alone therefore never runs.
+[s3fs_file_proxy_to_s3](https://www.drupal.org/project/s3fs_file_proxy_to_s3)
+fills the gap: a file missing from the metadata table gets a URL on the site,
+and the first request copies it from the source bucket into the preview
+bucket, then redirects to it. Image style derivatives are built on the preview
+from the copied original.
+
+1. Add both modules to the project, but do not enable them or export their
+   config. Until s3fs_file_proxy_to_s3 has a release after 4.0.2, the dev
+   branch is needed for stage_file_proxy 3:
+
+   ```bash
+   composer require drupal/stage_file_proxy:^3 drupal/s3fs_file_proxy_to_s3:4.0.x-dev
+   ```
+
+2. In the automation's variables, set `STAGE_FILE_PROXY_ORIGIN` to the base
+   URL of the source's public files, without the `s3fs-public` folder: its
+   `AWS_URL`, or `https://<AWS_BUCKET>.laravel.cloud`.
+
+`preview-deploy.php` then empties the metadata table and installs the two
+modules after importing the database, and `laravelcloud_settings()` sets the
+origin and keeps later config imports from uninstalling them. This applies to
+new previews only.
+
+Pages cached before a file was copied keep linking to the site URL, which
+redirects to the bucket. Tested with a local S3 emulator as the preview bucket
+and a Laravel Cloud bucket as the origin, not yet on a Cloud preview.
 
 A preview does not copy the App cluster's wake up interval; it is off, so a
 sleeping preview stays asleep until it gets a request.
