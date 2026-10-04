@@ -1,6 +1,0 @@
-name: 'Laravel Cloud Queue'
-type: module
-description: 'Integrates Drupal queues with Laravel Cloud managed queues.'
-core_version_requirement: '^11.4 || ^12'
-php: 8.4
-package: Hosting
