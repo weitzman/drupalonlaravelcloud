@@ -3,77 +3,41 @@
 
 /**
  * @file
- * Presents Drupal cron to Laravel Cloud's Scheduler as a Laravel task schedule.
+ * Runs Drupal cron on a schedule as a Laravel Cloud background process.
  *
- * With the Scheduler toggle on, Cloud reads the schedule at deploy time with
- * "php artisan schedule:list --json" and runs "php artisan schedule:run". The
- * schedule holds one task: Drupal cron, hourly unless DRUPAL_CRON_SCHEDULE
- * holds another cron expression.
+ * Laravel Cloud does not allow its Scheduler on a Symfony environment that
+ * scales to zero. Instead, run "php artisan schedule:work" as a background
+ * process on the App cluster, and set the cluster's wake up interval so cron
+ * also runs when the site has no traffic.
  *
- * Cloud does not wake a sleeping environment for the task, and only calls
- * "schedule:run" at the times in the listed schedule. The schedule is therefore
- * listed as every minute, and "schedule:run" decides whether cron is due. A run
- * that was missed while asleep then happens within a minute of waking.
- *
- * Cloud does not allow the Scheduler on an environment that scales to zero.
- * There, run "php artisan schedule:work" as a background process and set the
- * App cluster's wake up interval, so cron also runs when the site has no
- * traffic.
+ * Cron runs hourly unless DRUPAL_CRON_SCHEDULE holds another cron expression.
  */
 
 use Cron\CronExpression;
 
 require __DIR__ . '/vendor/autoload.php';
 
+if (($argv[1] ?? '') !== 'schedule:work') {
+  fwrite(STDERR, "Usage: php artisan schedule:work\n");
+  exit(1);
+}
+
 chdir(__DIR__);
-$command = $argv[1] ?? '';
-$cron_command = [PHP_BINARY, __DIR__ . '/vendor/bin/dr', 'system:cron'];
 $schedule = new CronExpression(getenv('DRUPAL_CRON_SCHEDULE') ?: '0 * * * *');
+$cron = implode(' ', array_map('escapeshellarg', [PHP_BINARY, __DIR__ . '/vendor/bin/dr', 'system:cron']));
 
-if ($command === 'schedule:list') {
-  // The same fields as Laravel's "schedule:list --json".
-  $next = (new CronExpression('* * * * *'))->getNextRunDate('now', 0, FALSE, 'UTC');
-  echo json_encode([
-    [
-      'expression' => '* * * * *',
-      'command' => 'php vendor/bin/dr system:cron',
-      'description' => 'Drupal cron',
-      'next_due_date' => $next->format('Y-m-d H:i:s P'),
-      'next_due_date_human' => $next->format('c'),
-      'timezone' => 'UTC',
-      'has_mutex' => FALSE,
-      'repeat_seconds' => NULL,
-    ],
-  ]) . "\n";
-  exit(0);
-}
+// Start from Drupal's record of the last run, so a restart does not run cron
+// early.
+$drush = escapeshellarg(__DIR__ . '/vendor/bin/drush');
+preg_match('/(\d+)\s*$/', (string) shell_exec("$drush state:get system.cron_last 2>/dev/null"), $matches);
+$last_run = (int) ($matches[1] ?? 0);
 
-if ($command === 'schedule:run') {
-  // Run when a scheduled time has passed since the last run. That covers the
-  // current minute and a time missed while asleep. The marker file avoids
-  // starting Drupal every minute; without one, ask Drupal for the last run.
-  $marker = sys_get_temp_dir() . '/drupal-cron-last-run';
-  if (!file_exists($marker)) {
-    $drush = escapeshellarg(__DIR__ . '/vendor/bin/drush');
-    preg_match('/(\d+)\s*$/', (string) shell_exec("$drush state:get system.cron_last 2>/dev/null"), $matches);
-    touch($marker, (int) ($matches[1] ?? 0));
+while (TRUE) {
+  // Run when a scheduled time has passed since the last run. That covers a
+  // time missed while the environment slept.
+  if ($last_run < $schedule->getPreviousRunDate('now', 0, TRUE, 'UTC')->getTimestamp()) {
+    $last_run = time();
+    passthru($cron);
   }
-  if (filemtime($marker) >= $schedule->getPreviousRunDate('now', 0, TRUE, 'UTC')->getTimestamp()) {
-    exit(0);
-  }
-  touch($marker);
-  passthru(implode(' ', array_map('escapeshellarg', $cron_command)), $status);
-  exit($status);
+  sleep(60);
 }
-
-if ($command === 'schedule:work') {
-  // Like Laravel, call "schedule:run" every minute until stopped.
-  $run = implode(' ', array_map('escapeshellarg', [PHP_BINARY, __FILE__, 'schedule:run']));
-  while (TRUE) {
-    passthru($run);
-    sleep(60);
-  }
-}
-
-fwrite(STDERR, "Unsupported artisan command: $command\n");
-exit(1);
