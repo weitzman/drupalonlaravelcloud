@@ -103,19 +103,23 @@ for each step.
    and the deploy command to
    `php web/modules/contrib/laravelcloud/deploy.php`. It runs `drush deploy`,
    and does nothing while the database is empty.
-6. Deploy. Then install the site by running `vendor/bin/drush site:install`
-   once as a command in the environment.
+6. Deploy. Then install the site by running this once as a command in the
+   environment:
+
+   ```bash
+   vendor/bin/drush site:install --account-name=admin -y demo_umami
+   ```
+
 7. Add a background process running `vendor/bin/dr lc:cron`. If the
    environment scales to zero, enable "Wake up interval" on the App cluster.
    See [compute](https://cloud.laravel.com/docs/compute).
-8. Optional: for backups and previews, create a private backup bucket, set
+8. Optional: for DB backups and Preview environments, create a private backup bucket, set
    `DB_BACKUP_URL` and `DB_BACKUP_SCHEDULE`, and point a
    [preview environment](https://cloud.laravel.com/docs/preview-environments)
    automation at `preview-deploy.php`. Change `origin` in
    [stage_file_proxy.settings.yml](config/stage_file_proxy.settings.yml) to
    your own bucket's URL so previews fetch files from your production.
-9. Optional: for local development, run the fork with the
-   [DDEV quickstart](https://docs.ddev.com/en/stable/users/quickstart/), then
+9. Optional: for local development, run
    `ddev add-on get weitzman/ddev-laravelcloud` and `ddev pull laravelcloud`.
 
 ### Get your own Drupal application onto Laravel Cloud
@@ -139,7 +143,7 @@ for each step.
    `laravelcloud_settings($settings, $databases, $config);` and select the
    `queue.laravelcloud` backend, as in
    [settings.php](web/sites/default/settings.php).
-6. For previews, add
+6. For Preview Environments, add
    [Stage File Proxy](https://www.drupal.org/project/stage_file_proxy) and
    [S3FS File Proxy to S3](https://www.drupal.org/project/s3fs_file_proxy_to_s3)
    so they fetch files from production.
