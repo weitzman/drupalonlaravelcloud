@@ -57,19 +57,20 @@ text{fill:#f0f6fc}
 <text class="s c" x="520" y="88">a request arrives</text><path class="l" d="M520 94V108" marker-end="url(#a)"/>
 <text class="s c" x="800" y="88">wake-up interval</text><path class="l" d="M800 94V108" marker-end="url(#a)"/>
 <text class="t" x="24" y="197">Drupal cron</text>
+<path class="l" d="M230 184V200"/>
+<path class="l" d="M400 184V200"/>
+<path class="l" d="M570 184V200"/>
+<path class="l" d="M740 184V200"/>
+<path class="l" d="M910 184V200"/>
 <circle class="dot" cx="230" cy="192" r="5"/>
-<circle class="miss" cx="400" cy="192" r="5"/>
+<circle class="dot" cx="570" cy="192" r="5"/>
+<path class="l" stroke-dasharray="3 3" d="M400 192H520" marker-end="url(#a)"/>
 <circle class="dot" cx="528" cy="192" r="5"/>
-<circle class="dot" cx="590" cy="192" r="5"/>
-<circle class="miss" cx="740" cy="192" r="5"/>
+<path class="l" stroke-dasharray="3 3" d="M740 192H800" marker-end="url(#a)"/>
 <circle class="dot" cx="808" cy="192" r="5"/>
-<circle class="miss" cx="940" cy="192" r="5"/>
-<path class="l" stroke-dasharray="3 3" d="M406 192H520"/>
-<path class="l" stroke-dasharray="3 3" d="M746 192H800"/>
-<circle class="dot" cx="186" cy="224" r="4"/>
-<text class="s" x="196" y="228">ran</text>
-<circle class="miss" cx="240" cy="224" r="4"/>
-<text class="s" x="250" y="228">due while asleep, runs within a minute of waking</text>
+<path class="l" stroke-dasharray="3 3" d="M910 192H976"/>
+<text class="s c" x="400" y="218">due while asleep</text>
+<text class="s" x="470" y="218">runs within a minute of waking</text>
 <text class="t" x="24" y="322">Queue workers</text>
 <path class="drupal" d="M420 340V320H480V280H600V320H680V340z"/>
 <path class="l" d="M180 340H976"/>
