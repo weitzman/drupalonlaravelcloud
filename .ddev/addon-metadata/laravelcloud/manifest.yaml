@@ -1,0 +1,9 @@
+name: laravelcloud
+repository: https://github.com/weitzman/ddev-laravelcloud/tarball/main
+version: ""
+install_date: "2026-10-04T22:52:31-04:00"
+project_files:
+    - providers/laravelcloud.yaml
+    - laravelcloud/db-backup-download
+global_files: []
+removal_actions: []
