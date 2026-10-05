@@ -1,5 +1,5 @@
 {
-    "_hash": "8b925e78da3e981d90d4be203a7b7bdc3c31f0bdf4a1f61812d9c323e41cac81",
+    "_hash": "fe834d1a1e1b3a6128c1a1f1416c8d7a4987fb42cad1e4d2b922f3964e1bb0a6",
     "patches": {
         "drupal/core": [
             {
@@ -19,16 +19,6 @@
                 "description": "#3628510: File cache tags not invalidated for converted derivatives of root-level files",
                 "url": "patches/s3fs-3628510-converted-source-uri-root.patch",
                 "sha256": "b53d3de7166db0dfa7247748d00fb91891a7d18f493aa470416d0bc0f2b6141f",
-                "depth": 1,
-                "extra": {
-                    "provenance": "root"
-                }
-            },
-            {
-                "package": "drupal/s3fs",
-                "description": "#3307379: Use the latest file available when flushing image cache",
-                "url": "patches/s3fs-3307379-invalidate-all-files.patch",
-                "sha256": "8a60fa9833286528d72f9a89413e2949161df081798fc806f5c9beae738bc075",
                 "depth": 1,
                 "extra": {
                     "provenance": "root"
