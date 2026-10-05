@@ -94,25 +94,30 @@ to supervise.
 1. Fork this repo.
 2. Sign up at [cloud.laravel.com](https://cloud.laravel.com) and create an
    application from the fork. See the
-   [Cloud docs](https://cloud.laravel.com/docs).
+   [Cloud docs](https://cloud.laravel.com/docs). Cloud detects a Symfony
+   app, generates `APP_SECRET` (the hash salt) and fills in the build
+   command.
 3. Attach a
    [MySQL database](https://cloud.laravel.com/docs/resources/databases), a
    public [bucket](https://cloud.laravel.com/docs/resources/object-storage)
    and a [managed queue](https://cloud.laravel.com/docs/queues).
 4. Set the [environment](https://cloud.laravel.com/docs/environments)
-   variables `APP_SECRET` (the hash salt) and `DRUPAL_CRON_SCHEDULE` (for
-   example `@hourly`).
-5. Set the build command to
-   `composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader`
-   and the deploy command to
+   variable `DRUPAL_CRON_SCHEDULE` (for example `@hourly`).
+5. Set the deploy command to
    `php web/modules/contrib/laravelcloud/deploy.php`. It runs `drush deploy`,
    and does nothing while the database is empty.
-6. Deploy. Then install the site by running this once as a command in the
-   environment:
+6. Deploy. Then load the demo's
+   [database dump](https://github.com/weitzman/drupalonlaravelcloud/releases/tag/demo-db)
+   by running this once as a command in the environment:
 
    ```bash
-   vendor/bin/drush site:install --account-name=admin -y demo_umami
+   curl -sLo /tmp/db.sql.gz https://github.com/weitzman/drupalonlaravelcloud/releases/download/demo-db/db.sql.gz && vendor/bin/drush sql:query --file=/tmp/db.sql.gz && vendor/bin/drush s3fs:refresh-cache && vendor/bin/drush deploy
    ```
+
+   Images are copied from the demo's bucket to yours on first request.
+   `drush site:install` does not work here: the site must start from the
+   config UUIDs in this repo, and Umami cannot be installed from existing
+   config. Log in with `vendor/bin/drush user:login`.
 
 7. Add a background process running `vendor/bin/dr lc:cron`. If the
    environment scales to zero, enable "Wake up interval" on the App cluster.
@@ -121,7 +126,9 @@ to supervise.
    `DB_BACKUP_URL` and `DB_BACKUP_SCHEDULE`, add a background process running
    `vendor/bin/dr lc:db-backup-schedule`, and point a
    [preview environment](https://cloud.laravel.com/docs/preview-environments)
-   automation at `preview-deploy.php`. Change `origin` in
+   automation at `preview-deploy.php`. The
+   [module README](https://www.drupal.org/project/laravelcloud) has the
+   commands and the `DB_BACKUP_URL` format. Change `origin` in
    [stage_file_proxy.settings.yml](config/stage_file_proxy.settings.yml) to
    your own bucket's URL so previews fetch files from your production.
 9. Optional: for local development, run
@@ -153,5 +160,5 @@ to supervise.
    [S3FS File Proxy to S3](https://www.drupal.org/project/s3fs_file_proxy_to_s3)
    so they fetch files from production.
 7. Push, then follow steps 2 to 9 above with your own repo. For an existing
-   site, import its database instead of running `site:install`, and copy its
-   public files to the bucket.
+   site, import its own database dump in step 6, and copy its public files
+   to the bucket.
