@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 548" width="1000" height="548" role="img" aria-labelledby="t d">
+<title id="t">Drupal on Laravel Cloud architecture</title>
+<desc id="d">Visitors reach the App cluster through Cloudflare. A git push builds and deploys. Drupal in the App cluster uses a MySQL database, object storage, a cache and a managed queue, whose items are processed by managed queue workers.</desc>
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;fill:#1f2328;font-size:14px}
+.h{font-size:20px;font-weight:600}
+.t{font-weight:600}
+.s{font-size:12px;fill:#59636e}
+.m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px}
+.c{text-anchor:middle}
+.bg{fill:#fff;stroke:#d0d7de}
+.box{fill:#f6f8fa;stroke:#afb8c1}
+.cloud{fill:#fff3f0;stroke:#f53003}
+.zone{fill:none;stroke:#f53003;stroke-dasharray:6 4}
+.zt{fill:#c92a04;font-weight:600}
+.drupal{fill:#e7f3fb;stroke:#0678be}
+.mod{fill:#fff8c5;stroke:#bf8700}
+.off{fill:none;stroke:#afb8c1;stroke-dasharray:4 4}
+.l{stroke:#59636e;fill:none;stroke-width:1.5}
+.ah{fill:#59636e}
+.dot{fill:#0678be;stroke:#0678be;stroke-width:1.5}
+.miss{fill:none;stroke:#59636e;stroke-width:1.5}
+@media (prefers-color-scheme:dark){
+text{fill:#f0f6fc}
+.s{fill:#9198a1}
+.bg{fill:#0d1117;stroke:#3d444d}
+.box{fill:#1c232c;stroke:#56606b}
+.cloud{fill:#33160f;stroke:#ff5a3c}
+.zone{stroke:#ff5a3c}
+.zt{fill:#ff8a73}
+.drupal{fill:#0c2d48;stroke:#4aa8e0}
+.mod{fill:#3a2d00;stroke:#d29922}
+.off{stroke:#56606b}
+.l{stroke:#9198a1}
+.ah{fill:#9198a1}
+.dot{fill:#4aa8e0;stroke:#4aa8e0}
+.miss{stroke:#9198a1}
+}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
+<rect class="bg" x="0.5" y="0.5" width="999" height="547" rx="10"/>
+<text class="h" x="24" y="38">Drupal on Laravel Cloud</text>
+<text class="s" x="24" y="58">Drupal uses the platform&#8217;s own services. Two contrib modules connect them.</text>
+<rect class="zone" x="200" y="78" width="780" height="446" rx="8"/>
+<text class="zt" x="216" y="100">Laravel Cloud</text>
+<rect class="box" x="24" y="125" width="140" height="50" rx="6"/>
+<text class="c t" x="94.0" y="154.5">Visitors</text>
+<path class="l" d="M164 150H220" marker-end="url(#a)"/>
+<rect class="cloud" x="220" y="125" width="130" height="50" rx="6"/>
+<text class="c t" x="285.0" y="146.0">Cloudflare CDN</text>
+<text class="c s" x="285.0" y="163.0">page cache</text>
+<path class="l" d="M350 150H390" marker-end="url(#a)"/>
+<rect class="box" x="24" y="238" width="140" height="64" rx="6"/>
+<text class="c t" x="94.0" y="266.0">git push</text>
+<text class="c s" x="94.0" y="283.0">GitHub</text>
+<path class="l" d="M164 270H220" marker-end="url(#a)"/>
+<rect class="cloud" x="220" y="238" width="130" height="64" rx="6"/>
+<text class="c t" x="285.0" y="257.5">Build &amp; deploy</text>
+<text class="c s" x="285.0" y="274.5">composer install,</text>
+<text class="c s" x="285.0" y="291.5">drush deploy</text>
+<path class="l" d="M350 270H390" marker-end="url(#a)"/>
+<rect class="cloud" x="390" y="110" width="290" height="256" rx="6"/>
+<text class="t" x="406" y="133">App cluster</text>
+<text class="s" x="406" y="151">hibernates when idle, wakes on a request</text>
+<rect class="drupal" x="406" y="162" width="258" height="56" rx="6"/>
+<text class="c t" x="535.0" y="186.0">Drupal 11 &#183; Umami demo</text>
+<text class="c m" x="535.0" y="203.0">laravelcloud_settings()</text>
+<rect class="mod" x="406" y="226" width="258" height="56" rx="6"/>
+<text class="c t" x="535.0" y="250.0">laravelcloud + laravelcloud_queue</text>
+<text class="c s" x="535.0" y="267.0">contrib modules</text>
+<rect class="box" x="406" y="290" width="258" height="64" rx="6"/>
+<text class="c s" x="535.0" y="309.5">Background processes</text>
+<text class="c m" x="535.0" y="326.5">dr lc:cron</text>
+<text class="c m" x="535.0" y="343.5">dr lc:db-backup-schedule</text>
+<rect class="cloud" x="390" y="400" width="290" height="100" rx="6"/>
+<text class="c t" x="535.0" y="429.0">Managed queue workers</text>
+<text class="c s" x="535.0" y="446.0">autoscaled, wake from zero on an item</text>
+<text class="c m" x="535.0" y="463.0">bin/console &#8594; dr lc:queue-work</text>
+<text class="c s" x="535.0" y="480.0">runs Drupal queue worker plugins</text>
+<rect class="cloud" x="740" y="110" width="220" height="64" rx="6"/>
+<text class="c t" x="850.0" y="138.0">MySQL database</text>
+<text class="c s" x="850.0" y="155.0">content and config</text>
+<rect class="cloud" x="740" y="192" width="220" height="64" rx="6"/>
+<text class="c t" x="850.0" y="220.0">Object storage</text>
+<text class="c s" x="850.0" y="237.0">public files (s3fs), DB backups</text>
+<rect class="cloud" x="740" y="274" width="220" height="64" rx="6"/>
+<text class="c t" x="850.0" y="302.0">Cache</text>
+<text class="c s" x="850.0" y="319.0">Valkey or Redis cache bins</text>
+<rect class="cloud" x="740" y="418" width="220" height="64" rx="6"/>
+<text class="c t" x="850.0" y="446.0">Managed queue</text>
+<text class="c s" x="850.0" y="463.0">Drupal queue items</text>
+<path class="l" d="M680 142H740" marker-end="url(#a)"/>
+<path class="l" d="M680 224H740" marker-end="url(#a)"/>
+<path class="l" d="M680 306H740" marker-end="url(#a)"/>
+<path class="l" d="M680 350H710V436H740" marker-end="url(#a)"/>
+<text class="s" x="716" y="396">items</text>
+<path class="l" d="M740 464H680" marker-end="url(#a)"/>
+</svg>

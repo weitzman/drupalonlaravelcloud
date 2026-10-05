@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 448" width="1000" height="448" role="img" aria-labelledby="t d">
+<title id="t">Preview environment data flow</title>
+<desc id="d">Production uploads a database dump to a private backup bucket on a schedule. A preview environment loads that dump when it is created, and fetches files from the production bucket on first request. DDEV pulls the same dump for local development.</desc>
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;fill:#1f2328;font-size:14px}
+.h{font-size:20px;font-weight:600}
+.t{font-weight:600}
+.s{font-size:12px;fill:#59636e}
+.m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px}
+.c{text-anchor:middle}
+.bg{fill:#fff;stroke:#d0d7de}
+.box{fill:#f6f8fa;stroke:#afb8c1}
+.cloud{fill:#fff3f0;stroke:#f53003}
+.zone{fill:none;stroke:#f53003;stroke-dasharray:6 4}
+.zt{fill:#c92a04;font-weight:600}
+.drupal{fill:#e7f3fb;stroke:#0678be}
+.mod{fill:#fff8c5;stroke:#bf8700}
+.off{fill:none;stroke:#afb8c1;stroke-dasharray:4 4}
+.l{stroke:#59636e;fill:none;stroke-width:1.5}
+.ah{fill:#59636e}
+.dot{fill:#0678be;stroke:#0678be;stroke-width:1.5}
+.miss{fill:none;stroke:#59636e;stroke-width:1.5}
+@media (prefers-color-scheme:dark){
+text{fill:#f0f6fc}
+.s{fill:#9198a1}
+.bg{fill:#0d1117;stroke:#3d444d}
+.box{fill:#1c232c;stroke:#56606b}
+.cloud{fill:#33160f;stroke:#ff5a3c}
+.zone{stroke:#ff5a3c}
+.zt{fill:#ff8a73}
+.drupal{fill:#0c2d48;stroke:#4aa8e0}
+.mod{fill:#3a2d00;stroke:#d29922}
+.off{stroke:#56606b}
+.l{stroke:#9198a1}
+.ah{fill:#9198a1}
+.dot{fill:#4aa8e0;stroke:#4aa8e0}
+.miss{stroke:#9198a1}
+}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
+<rect class="bg" x="0.5" y="0.5" width="999" height="447" rx="10"/>
+<text class="h" x="24" y="38">Production data in previews and locally</text>
+<text class="s" x="24" y="58">Each pull request gets an environment with real content.</text>
+<rect class="zone" x="24" y="78" width="246" height="246" rx="8"/>
+<text class="zt" x="38" y="100">Production</text>
+<rect class="zone" x="730" y="78" width="246" height="246" rx="8"/>
+<text class="zt" x="744" y="100">Preview environment</text>
+<rect class="cloud" x="36" y="112" width="222" height="66" rx="6"/>
+<text class="c t" x="147.0" y="141.0">Public bucket</text>
+<text class="c s" x="147.0" y="158.0">files, through s3fs</text>
+<rect class="cloud" x="742" y="112" width="222" height="66" rx="6"/>
+<text class="c t" x="853.0" y="141.0">Files and image styles</text>
+<text class="c s" x="853.0" y="158.0">fetched from production as needed</text>
+<path class="l" d="M258 145H742" marker-end="url(#a)"/>
+<text class="s c" x="500" y="136">on first request, by Stage File Proxy</text>
+<rect class="cloud" x="36" y="242" width="222" height="66" rx="6"/>
+<text class="c t" x="147.0" y="279.5">MySQL database</text>
+<path class="l" d="M258 275H410" marker-end="url(#a)"/>
+<text class="m c" x="340" y="266">dr lc:db-backup</text>
+<rect class="cloud" x="410" y="242" width="180" height="66" rx="6"/>
+<text class="c t" x="500.0" y="271.0">Private backup bucket</text>
+<text class="c s" x="500.0" y="288.0">latest dump, on a schedule</text>
+<path class="l" d="M590 275H742" marker-end="url(#a)"/>
+<text class="m c" x="660" y="266">preview-deploy.php</text>
+<rect class="cloud" x="742" y="242" width="222" height="66" rx="6"/>
+<text class="c t" x="853.0" y="271.0">Database</text>
+<text class="c s" x="853.0" y="288.0">filled when the preview is created</text>
+<path class="l" d="M500 308V362" marker-end="url(#a)"/>
+<rect class="box" x="410" y="362" width="180" height="62" rx="6"/>
+<text class="c t" x="500.0" y="389.0">DDEV (local)</text>
+<text class="c m" x="500.0" y="406.0">ddev pull laravelcloud</text>
+</svg>
