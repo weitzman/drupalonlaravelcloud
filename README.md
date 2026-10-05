@@ -2,11 +2,12 @@
 
 A working Drupal 11 site hosted on [Laravel Cloud](https://cloud.laravel.com).
 It is Drupal's Umami demo, deployed the way Cloud deploys a Laravel or Symfony
-app: push to Git, Cloud builds and releases.
+app: push to Git, Cloud builds and deploys.
 
 The site uses Cloud's own database, object
-storage, managed queues, background processes and preview environments, and
-it scales to zero when idle.
+storage, managed queues, background processes and preview environments.
+
+Laravel Cloud's scale to zero functionality positions it as highly capable AND highly affordable.
 
 ## What it does
 
