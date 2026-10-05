@@ -114,7 +114,8 @@ for each step.
    environment scales to zero, enable "Wake up interval" on the App cluster.
    See [compute](https://cloud.laravel.com/docs/compute).
 8. Optional: for DB backups and Preview environments, create a private backup bucket, set
-   `DB_BACKUP_URL` and `DB_BACKUP_SCHEDULE`, and point a
+   `DB_BACKUP_URL` and `DB_BACKUP_SCHEDULE`, add a background process running
+   `vendor/bin/dr lc:db-backup-schedule`, and point a
    [preview environment](https://cloud.laravel.com/docs/preview-environments)
    automation at `preview-deploy.php`. Change `origin` in
    [stage_file_proxy.settings.yml](config/stage_file_proxy.settings.yml) to
