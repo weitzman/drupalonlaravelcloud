@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 378" width="1000" height="378" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 361" width="1000" height="361" role="img" aria-labelledby="t d">
 <title id="t">Scale to zero timeline</title>
 <desc id="d">The App cluster hibernates when idle and wakes on a request or on the wake-up interval. Cron runs that came due while asleep run within a minute of waking. Queue workers start from zero when an item arrives, scale with the backlog and return to zero.</desc>
 <style>
@@ -40,7 +40,7 @@ text{fill:#f0f6fc}
 }
 </style>
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
-<rect class="bg" x="0.5" y="0.5" width="999" height="377" rx="10"/>
+<rect class="bg" x="0.5" y="0.5" width="999" height="360" rx="10"/>
 <text class="h" x="24" y="38">Scale to zero</text>
 <text class="s" x="24" y="58">Nothing runs while idle. Cron and queues keep working.</text>
 <text class="t" x="24" y="141">App cluster</text>
@@ -58,6 +58,7 @@ text{fill:#f0f6fc}
 <text class="c s" x="938.0" y="140.5">hibernating</text>
 <text class="s c" x="520" y="88">a request arrives</text><path class="l" d="M520 94V108" marker-end="url(#a)"/>
 <text class="s c" x="800" y="88">wake-up interval</text><path class="l" d="M800 94V108" marker-end="url(#a)"/>
+<g transform="translate(0 9)">
 <text class="t" x="24" y="197">Drupal cron</text>
 <path class="l" d="M400 184V200"/>
 <path class="l" d="M740 184V200"/>
@@ -79,12 +80,15 @@ text{fill:#f0f6fc}
 <path class="l" stroke-dasharray="3 3" d="M910 192H976"/>
 <text class="s c" x="400" y="218">due while asleep</text>
 <text class="s" x="470" y="218">runs within a minute of waking</text>
-<text class="t" x="24" y="322">Queue workers</text>
-<path class="drupal" d="M420 340V320H480V280H600V320H680V340z"/>
+</g>
+<g transform="translate(0 -17)">
+<text class="t" x="24" y="315">Queue workers</text>
+<path class="drupal" d="M420 340V320H480V280H690V320H760V340z"/>
 <path class="l" d="M180 340H976"/>
 <text class="s c" x="420" y="290">an item arrives</text><path class="l" d="M420 296V310" marker-end="url(#a)"/>
-<text class="s c" x="540" y="272">workers scale with the backlog</text>
+<text class="s c" x="585" y="304">workers scale with the backlog</text>
 <text class="s c" x="300" y="332">zero workers</text>
-<text class="s c" x="828" y="332">back to zero</text>
+<text class="s c" x="868" y="332">back to zero</text>
 <text class="s" x="976" y="362"><tspan text-anchor="end">time &#8594;</tspan></text>
+</g>
 </svg>
