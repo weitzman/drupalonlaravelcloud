@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f69e9e8c9b7626d80e5155215b54ec87",
+    "content-hash": "39c5bfe453a19611ef210c3a84e18564",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1644,7 +1644,7 @@
         },
         {
             "name": "drupal/laravelcloud",
-            "version": "dev-claude/redis-igbinary",
+            "version": "1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/laravelcloud.git",
@@ -1660,6 +1660,7 @@
                 "drupal/redis": "^1.10",
                 "drupal/s3fs": "^3.11"
             },
+            "default-branch": true,
             "type": "drupal-module",
             "autoload": {
                 "files": [
