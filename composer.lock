@@ -1593,7 +1593,7 @@
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/laravelcloud.git",
-                "reference": "304eab93133c0aa8943a470f89bceaea62355548"
+                "reference": "a581ad53c3812a67d295211c22aefedeb014034b"
             },
             "require": {
                 "aws/aws-sdk-php": "^3.337",
@@ -1615,7 +1615,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Cron, settings, database backups and preview deploys for Drupal on Laravel Cloud.",
-            "time": "2026-10-05T05:13:28+00:00"
+            "time": "2026-10-05T05:28:33+00:00"
         },
         {
             "name": "drupal/laravelcloud_queue",
