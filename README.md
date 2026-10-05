@@ -114,11 +114,6 @@ to supervise.
    curl -sLo /tmp/db.sql.gz https://github.com/weitzman/drupalonlaravelcloud/releases/download/demo-db/db.sql.gz && vendor/bin/drush sql:query --file=/tmp/db.sql.gz && vendor/bin/drush s3fs:refresh-cache && vendor/bin/drush deploy
    ```
 
-   Images are copied from the demo's bucket to yours on first request.
-   `drush site:install` does not work here: the site must start from the
-   config UUIDs in this repo, and Umami cannot be installed from existing
-   config. Log in with `vendor/bin/drush user:login`.
-
 7. Add a background process running `vendor/bin/dr lc:cron`. If the
    environment scales to zero, enable "Wake up interval" on the App cluster.
    See [compute](https://cloud.laravel.com/docs/compute).
