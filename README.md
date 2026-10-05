@@ -1,11 +1,11 @@
 # Drupal on Laravel Cloud
 
-A working Drupal 11 site hosted on [Laravel Cloud](https://cloud.laravel.com).
+A [working Drupal 11 site](https://drupalonlaravelcloud.cyrve.com/) hosted on [Laravel Cloud](https://cloud.laravel.com).
 It is Drupal's Umami demo, deployed the way Cloud deploys a Laravel or Symfony
 app: push to Git, Cloud builds and deploys.
 
 The site uses Cloud's own database, object
-storage, managed queues, background processes and preview environments.
+storage, managed queues, background processes, CDN cache (Cloudflare) and preview environments.
 
 Laravel Cloud's scale to zero functionality positions it as highly capable AND highly affordable.
 
