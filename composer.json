@@ -136,8 +136,7 @@
                 "#3264534: Add file cache tags to the responsive image formatter": "patches/core-3264534-responsive-image-file-cache-tags.patch"
             },
             "drupal/s3fs": {
-                "#3628510: File cache tags not invalidated for converted derivatives of root-level files": "patches/s3fs-3628510-converted-source-uri-root.patch",
-                "#3307379: Use the latest file available when flushing image cache": "patches/s3fs-3307379-invalidate-all-files.patch"
+                "#3628510: File cache tags not invalidated for converted derivatives of root-level files": "patches/s3fs-3628510-converted-source-uri-root.patch"
             }
         }
     }
