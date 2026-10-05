@@ -58,6 +58,7 @@ module:
   views_ui: 0
   workflows: 0
   content_translation: 10
+  image_style_warmer: 10
   views: 10
   demo_umami: 1000
 theme:

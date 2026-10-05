@@ -1,0 +1,16 @@
+_core:
+  default_config_hash: 7wcI6NyqWC9VsglvfEKjmQ9XY_D7lsTWkq0cRM4Ji7A
+initial_image_styles: {  }
+queue_image_styles:
+  large_3_2_2x: large_3_2_2x
+  large_3_2_768x512: large_3_2_768x512
+  medium_3_2_2x: medium_3_2_2x
+  medium_3_2_600x400: medium_3_2_600x400
+  medium_8_7: medium_8_7
+  scale_crop_7_3_large: scale_crop_7_3_large
+  scale_crop_7_3_medium: scale_crop_7_3_medium
+  scale_crop_7_3_tiny: scale_crop_7_3_tiny
+  scale_crop_7_3_wide: scale_crop_7_3_wide
+  square_large: square_large
+  square_medium: square_medium
+  square_small: square_small
