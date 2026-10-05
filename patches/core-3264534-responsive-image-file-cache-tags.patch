@@ -1,0 +1,12 @@
+diff --git a/core/modules/responsive_image/src/Plugin/Field/FieldFormatter/ResponsiveImageFormatter.php b/core/modules/responsive_image/src/Plugin/Field/FieldFormatter/ResponsiveImageFormatter.php
+--- a/core/modules/responsive_image/src/Plugin/Field/FieldFormatter/ResponsiveImageFormatter.php
++++ b/core/modules/responsive_image/src/Plugin/Field/FieldFormatter/ResponsiveImageFormatter.php
+@@ -249,7 +249,7 @@
+         '#responsive_image_style_id' => $responsive_image_style ? $responsive_image_style->id() : '',
+         '#url' => $url,
+         '#cache' => [
+-          'tags' => $cache_tags,
++          'tags' => Cache::mergeTags($cache_tags, $file->getCacheTags()),
+         ],
+       ];
+     }
