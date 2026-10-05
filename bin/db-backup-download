@@ -1,0 +1,25 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * @file
+ * Downloads the database backup that "dr lc:db-backup" uploads.
+ *
+ * Usage: bin/db-backup-download [DESTINATION]
+ *
+ * DESTINATION defaults to db.sql.gz in the current directory. Needs
+ * DB_BACKUP_URL; see "Database backup" in the laravelcloud module's README.
+ */
+
+// The laravelcloud module's autoloaded file reads the project's .env.
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+if (!getenv('DB_BACKUP_URL')) {
+  fwrite(STDERR, "DB_BACKUP_URL is not set. Set it to the backup bucket's read-only URL.\n");
+  exit(1);
+}
+
+$destination = $argv[1] ?? 'db.sql.gz';
+[$client, $object] = laravelcloud_db_backup();
+$client->getObject($object + ['SaveAs' => $destination]);
+echo "Downloaded the database backup to $destination.\n";
