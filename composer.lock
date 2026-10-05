@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a475d519d17454f6dfa346b9bb25fea0",
+    "content-hash": "9f606cd78b05a623057da731dd683621",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1589,11 +1589,11 @@
         },
         {
             "name": "drupal/laravelcloud",
-            "version": "1.x-dev",
+            "version": "dev-claude/automatic-redis-support-8c0d8d",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/laravelcloud.git",
-                "reference": "2885c94fad6a5602cc267be04ad6bd56db24eed2"
+                "reference": "304eab93133c0aa8943a470f89bceaea62355548"
             },
             "require": {
                 "aws/aws-sdk-php": "^3.337",
@@ -1602,9 +1602,9 @@
                 "symfony/dotenv": "^7.3 || ^8.0"
             },
             "require-dev": {
+                "drupal/redis": "^1.10",
                 "drupal/s3fs": "^3.11"
             },
-            "default-branch": true,
             "type": "drupal-module",
             "autoload": {
                 "files": [
@@ -1615,7 +1615,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Cron, settings, database backups and preview deploys for Drupal on Laravel Cloud.",
-            "time": "2026-10-05T02:58:39+00:00"
+            "time": "2026-10-05T05:13:28+00:00"
         },
         {
             "name": "drupal/laravelcloud_queue",
@@ -1780,6 +1780,72 @@
             "homepage": "https://www.drupal.org/project/openapi_jsonapi",
             "support": {
                 "source": "https://git.drupalcode.org/project/openapi_jsonapi"
+            }
+        },
+        {
+            "name": "drupal/redis",
+            "version": "1.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/redis.git",
+                "reference": "8.x-1.11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/redis-8.x-1.11.zip",
+                "reference": "8.x-1.11",
+                "shasum": "4a32e50b85523fd09500b6c6398cf18504bdc652"
+            },
+            "require": {
+                "drupal/core": "^9.3 || ^10 || ^11"
+            },
+            "suggest": {
+                "ext-redis": "Required to use the PhpRedis as redis driver (^4.0|^5.0).",
+                "ext-relay": "Required to use the Relay as Redis driver (^0.5|^1.0).",
+                "predis/predis": "Required to use the Predis as redis driver (^1.1|^2.0)."
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.11",
+                    "datestamp": "1762688846",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\redis\\": "src"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "berdir",
+                    "homepage": "https://www.drupal.org/user/214652"
+                },
+                {
+                    "name": "greg.1.anderson",
+                    "homepage": "https://www.drupal.org/user/438598"
+                },
+                {
+                    "name": "kporras07",
+                    "homepage": "https://www.drupal.org/user/1349780"
+                },
+                {
+                    "name": "pounard",
+                    "homepage": "https://www.drupal.org/user/240164"
+                }
+            ],
+            "description": "Integration of Drupal with the Redis key-value store.",
+            "homepage": "https://www.drupal.org/project/redis",
+            "support": {
+                "source": "https://git.drupalcode.org/project/redis"
             }
         },
         {
