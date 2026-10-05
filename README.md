@@ -81,12 +81,7 @@ to supervise.
 - Drupal queues can be mapped to separate managed queues, each with its own
   workers.
 
-## Highlights
-
-Two ways to get Drupal onto Laravel Cloud. The module READMEs have the detail
-for each step.
-
-### Get this demo running in your own Cloud application
+## Get this demo running in your own Cloud application
 
 1. Fork this repo.
 2. Sign up at [cloud.laravel.com](https://cloud.laravel.com) and create an
@@ -124,7 +119,7 @@ for each step.
 9. Optional: for local development, run
    `ddev add-on get weitzman/ddev-laravelcloud` and `ddev pull laravelcloud`.
 
-### Get your own Drupal application onto Laravel Cloud
+## Get your own Drupal application onto Laravel Cloud
 
 1. Start from an existing Composer-based Drupal project, or
    [create one](https://www.drupal.org/docs/getting-started/installing-drupal/get-the-code).
