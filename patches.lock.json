@@ -1,0 +1,17 @@
+{
+    "_hash": "ffbed91e99d93eaa2583834f2f44ebbf667dea6205c48cdd59e8c6f130fa4d4e",
+    "patches": {
+        "drupal/s3fs": [
+            {
+                "package": "drupal/s3fs",
+                "description": "Invalidate file cache tags for converted derivatives of root-level files",
+                "url": "patches/s3fs-converted-source-uri-root.patch",
+                "sha256": "b53d3de7166db0dfa7247748d00fb91891a7d18f493aa470416d0bc0f2b6141f",
+                "depth": 1,
+                "extra": {
+                    "provenance": "root"
+                }
+            }
+        ]
+    }
+}
