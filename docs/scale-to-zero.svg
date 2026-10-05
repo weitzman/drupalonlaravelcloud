@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 378" width="1000" height="378" role="img" aria-labelledby="t d">
+<title id="t">Scale to zero timeline</title>
+<desc id="d">The App cluster hibernates when idle and wakes on a request or on the wake-up interval. Cron runs that came due while asleep run within a minute of waking. Queue workers start from zero when an item arrives, scale with the backlog and return to zero.</desc>
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;fill:#1f2328;font-size:14px}
+.h{font-size:20px;font-weight:600}
+.t{font-weight:600}
+.s{font-size:12px;fill:#59636e}
+.m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px}
+.c{text-anchor:middle}
+.bg{fill:#fff;stroke:#d0d7de}
+.box{fill:#f6f8fa;stroke:#afb8c1}
+.cloud{fill:#fff3f0;stroke:#f53003}
+.zone{fill:none;stroke:#f53003;stroke-dasharray:6 4}
+.zt{fill:#c92a04;font-weight:600}
+.drupal{fill:#e7f3fb;stroke:#0678be}
+.mod{fill:#fff8c5;stroke:#bf8700}
+.off{fill:none;stroke:#afb8c1;stroke-dasharray:4 4}
+.l{stroke:#59636e;fill:none;stroke-width:1.5}
+.ah{fill:#59636e}
+.dot{fill:#0678be;stroke:#0678be;stroke-width:1.5}
+.miss{fill:none;stroke:#59636e;stroke-width:1.5}
+@media (prefers-color-scheme:dark){
+text{fill:#f0f6fc}
+.s{fill:#9198a1}
+.bg{fill:#0d1117;stroke:#3d444d}
+.box{fill:#1c232c;stroke:#56606b}
+.cloud{fill:#33160f;stroke:#ff5a3c}
+.zone{stroke:#ff5a3c}
+.zt{fill:#ff8a73}
+.drupal{fill:#0c2d48;stroke:#4aa8e0}
+.mod{fill:#3a2d00;stroke:#d29922}
+.off{stroke:#56606b}
+.l{stroke:#9198a1}
+.ah{fill:#9198a1}
+.dot{fill:#4aa8e0;stroke:#4aa8e0}
+.miss{stroke:#9198a1}
+}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
+<rect class="bg" x="0.5" y="0.5" width="999" height="377" rx="10"/>
+<text class="h" x="24" y="38">Scale to zero</text>
+<text class="s" x="24" y="58">Nothing runs while idle. Cron and queues keep working.</text>
+<text class="t" x="24" y="141">App cluster</text>
+<rect class="drupal" x="180" y="114" width="150" height="44" rx="6"/>
+<text class="c t" x="255.0" y="140.5">awake</text>
+<rect class="off" x="330" y="114" width="190" height="44" rx="6"/>
+<text class="c s" x="425.0" y="140.5">hibernating</text>
+<rect class="drupal" x="520" y="114" width="130" height="44" rx="6"/>
+<text class="c t" x="585.0" y="140.5">awake</text>
+<rect class="off" x="650" y="114" width="150" height="44" rx="6"/>
+<text class="c s" x="725.0" y="140.5">hibernating</text>
+<rect class="drupal" x="800" y="114" width="100" height="44" rx="6"/>
+<text class="c t" x="850.0" y="140.5">awake</text>
+<rect class="off" x="900" y="114" width="76" height="44" rx="6"/>
+<text class="c s" x="938.0" y="140.5">hibernating</text>
+<text class="s c" x="520" y="88">a request arrives</text><path class="l" d="M520 94V108" marker-end="url(#a)"/>
+<text class="s c" x="800" y="88">wake-up interval</text><path class="l" d="M800 94V108" marker-end="url(#a)"/>
+<text class="t" x="24" y="197">Drupal cron</text>
+<circle class="dot" cx="230" cy="192" r="5"/>
+<circle class="miss" cx="400" cy="192" r="5"/>
+<circle class="dot" cx="528" cy="192" r="5"/>
+<circle class="dot" cx="590" cy="192" r="5"/>
+<circle class="miss" cx="740" cy="192" r="5"/>
+<circle class="dot" cx="808" cy="192" r="5"/>
+<circle class="miss" cx="940" cy="192" r="5"/>
+<path class="l" stroke-dasharray="3 3" d="M406 192H520"/>
+<path class="l" stroke-dasharray="3 3" d="M746 192H800"/>
+<circle class="dot" cx="186" cy="224" r="4"/>
+<text class="s" x="196" y="228">ran</text>
+<circle class="miss" cx="240" cy="224" r="4"/>
+<text class="s" x="250" y="228">due while asleep, runs within a minute of waking</text>
+<text class="t" x="24" y="322">Queue workers</text>
+<path class="drupal" d="M420 340V320H480V280H600V320H680V340z"/>
+<path class="l" d="M180 340H976"/>
+<text class="s c" x="420" y="290">an item arrives</text><path class="l" d="M420 296V310" marker-end="url(#a)"/>
+<text class="s c" x="540" y="272">workers scale with the backlog</text>
+<text class="s c" x="300" y="332">zero workers</text>
+<text class="s c" x="828" y="332">back to zero</text>
+<text class="s" x="976" y="362"><tspan text-anchor="end">time &#8594;</tspan></text>
+</svg>

@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 430" width="1000" height="430" role="img" aria-labelledby="t d">
+<title id="t">Queue flow</title>
+<desc id="d">Drupal code creates a queue item. The laravelcloud_queue backend sends it to a Cloud managed queue. Cloud starts a worker with bin/console messenger:consume, which the shim hands to dr lc:queue-work, which runs the Drupal QueueWorker plugin. Success deletes the item. An exception retries it with a doubling delay, and after four tries it is listed under failed jobs.</desc>
+<style>
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;fill:#1f2328;font-size:14px}
+.h{font-size:20px;font-weight:600}
+.t{font-weight:600}
+.s{font-size:12px;fill:#59636e}
+.m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px}
+.c{text-anchor:middle}
+.bg{fill:#fff;stroke:#d0d7de}
+.box{fill:#f6f8fa;stroke:#afb8c1}
+.cloud{fill:#fff3f0;stroke:#f53003}
+.zone{fill:none;stroke:#f53003;stroke-dasharray:6 4}
+.zt{fill:#c92a04;font-weight:600}
+.drupal{fill:#e7f3fb;stroke:#0678be}
+.mod{fill:#fff8c5;stroke:#bf8700}
+.off{fill:none;stroke:#afb8c1;stroke-dasharray:4 4}
+.l{stroke:#59636e;fill:none;stroke-width:1.5}
+.ah{fill:#59636e}
+.dot{fill:#0678be;stroke:#0678be;stroke-width:1.5}
+.miss{fill:none;stroke:#59636e;stroke-width:1.5}
+@media (prefers-color-scheme:dark){
+text{fill:#f0f6fc}
+.s{fill:#9198a1}
+.bg{fill:#0d1117;stroke:#3d444d}
+.box{fill:#1c232c;stroke:#56606b}
+.cloud{fill:#33160f;stroke:#ff5a3c}
+.zone{stroke:#ff5a3c}
+.zt{fill:#ff8a73}
+.drupal{fill:#0c2d48;stroke:#4aa8e0}
+.mod{fill:#3a2d00;stroke:#d29922}
+.off{stroke:#56606b}
+.l{stroke:#9198a1}
+.ah{fill:#9198a1}
+.dot{fill:#4aa8e0;stroke:#4aa8e0}
+.miss{stroke:#9198a1}
+}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
+<rect class="bg" x="0.5" y="0.5" width="999" height="429" rx="10"/>
+<text class="h" x="24" y="38">A Drupal queue item on Cloud&#8217;s managed queues</text>
+<text class="s" x="24" y="58">Cloud believes it is running a Symfony Messenger worker.</text>
+<rect class="drupal" x="24" y="84" width="280" height="70" rx="6"/>
+<text class="c t" x="164.0" y="115.0">Drupal code</text>
+<text class="c m" x="164.0" y="132.0">$queue-&gt;createItem($data)</text>
+<path class="l" d="M304 119H360" marker-end="url(#a)"/>
+<rect class="mod" x="360" y="84" width="280" height="70" rx="6"/>
+<text class="c t" x="500.0" y="115.0">laravelcloud_queue</text>
+<text class="c s" x="500.0" y="132.0">the queue.laravelcloud backend</text>
+<path class="l" d="M640 119H696" marker-end="url(#a)"/>
+<rect class="cloud" x="696" y="84" width="280" height="70" rx="6"/>
+<text class="c t" x="836.0" y="115.0">Cloud managed queue</text>
+<text class="c s" x="836.0" y="132.0">scales workers with the backlog</text>
+<path class="l" d="M836 154V214" marker-end="url(#a)"/>
+<rect class="cloud" x="696" y="214" width="280" height="70" rx="6"/>
+<text class="c t" x="836.0" y="245.0">Cloud starts a worker</text>
+<text class="c m" x="836.0" y="262.0">php bin/console messenger:consume</text>
+<path class="l" d="M696 249H640" marker-end="url(#a)"/>
+<rect class="mod" x="360" y="214" width="280" height="70" rx="6"/>
+<text class="c t" x="500.0" y="245.0">bin/console shim</text>
+<text class="c m" x="500.0" y="262.0">dr lc:queue-work</text>
+<path class="l" d="M360 249H304" marker-end="url(#a)"/>
+<rect class="drupal" x="24" y="214" width="280" height="70" rx="6"/>
+<text class="c t" x="164.0" y="245.0">Your QueueWorker plugin</text>
+<text class="c m" x="164.0" y="262.0">processItem($data)</text>
+<path class="l" d="M100 284V344" marker-end="url(#a)"/>
+<text class="s" x="108" y="318">success</text>
+<path class="l" d="M240 284V314H500V344" marker-end="url(#a)"/>
+<text class="s" x="330" y="308">exception</text>
+<rect class="box" x="24" y="344" width="280" height="62" rx="6"/>
+<text class="c t" x="164.0" y="379.5">Item deleted</text>
+<rect class="box" x="360" y="344" width="280" height="62" rx="6"/>
+<text class="c t" x="500.0" y="371.0">Retried</text>
+<text class="c s" x="500.0" y="388.0">after 1s, 2s, 4s (doubling delay)</text>
+<path class="l" d="M640 375H696" marker-end="url(#a)"/>
+<rect class="cloud" x="696" y="344" width="280" height="62" rx="6"/>
+<text class="c t" x="836.0" y="371.0">Failed jobs</text>
+<text class="c s" x="836.0" y="388.0">in the Cloud dashboard, after 4 tries</text>
+</svg>

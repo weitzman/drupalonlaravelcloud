@@ -9,6 +9,8 @@ storage, managed queues, background processes, CDN cache (Cloudflare) and previe
 
 Laravel Cloud's scale to zero functionality positions it as highly capable AND highly affordable.
 
+![Architecture: visitors and git push on the left; the App cluster, queue workers and Cloud resources inside Laravel Cloud](docs/architecture.svg)
+
 ## What it does
 
 - **Git push deploys.** Cloud runs `composer install`, then the module's
@@ -40,6 +42,10 @@ the preview.
 - **Production data locally.** `ddev pull laravelcloud` loads the latest
   database backup into [DDEV](https://ddev.com), through the
   [ddev-laravelcloud](https://github.com/weitzman/ddev-laravelcloud) add-on.
+
+![Timeline: the App cluster hibernates and wakes, cron catches up after waking, queue workers scale from zero](docs/scale-to-zero.svg)
+
+![Data flow: production files and database backups feed preview environments and DDEV](docs/preview-data.svg)
 
 ## The two modules
 
@@ -80,6 +86,8 @@ to supervise.
   `SuspendQueueException` behave as their authors intended.
 - Drupal queues can be mapped to separate managed queues, each with its own
   workers.
+
+![Queue flow: a Drupal queue item passes through a Cloud managed queue and the bin/console shim to a QueueWorker plugin](docs/queue-flow.svg)
 
 ## Get this demo running in your own Cloud application
 
