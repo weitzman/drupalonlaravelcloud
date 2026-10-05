@@ -36,9 +36,9 @@ styles work too: the original is fetched and the derivative is generated on
 the preview.
 - **Database backups.** Production uploads a fresh dump to a private bucket
   on the schedule in `DB_BACKUP_SCHEDULE`, for previews and CI.
-- **Production data locally.** `ddev pull laravel-cloud` copies an
-  environment's database into [DDEV](https://ddev.com). See
-  [the provider](.ddev/providers/laravel-cloud.yaml).
+- **Production data locally.** `ddev pull laravelcloud` loads the latest
+  database backup into [DDEV](https://ddev.com), through the
+  [ddev-laravelcloud](https://github.com/weitzman/ddev-laravelcloud) add-on.
 
 ## The two modules
 
@@ -82,56 +82,67 @@ to supervise.
 
 ## Highlights
 
-From nothing to Drupal on Laravel Cloud. The module READMEs have the detail
+Two ways to get Drupal onto Laravel Cloud. The module READMEs have the detail
 for each step.
 
-- **Create a Drupal project.**
-  [Get the code with Composer](https://www.drupal.org/docs/getting-started/installing-drupal/get-the-code)
-  and run it locally with the
-  [DDEV quickstart](https://docs.ddev.com/en/stable/users/quickstart/). Or
-  fork this repo.
-- **Add the packages.** Do this before creating the Cloud application: Cloud
-  detects a Symfony app from `symfony/framework-bundle`, and managed queues
-  depend on that. The modules have no tagged release yet; this repo's
-  [composer.json](composer.json) shows the `repositories` entries they need.
+### Get this demo running in your own Cloud application
 
-  ```bash
-  composer require drush/drush symfony/framework-bundle drupal/s3fs drupal/laravelcloud:1.x-dev drupal/laravelcloud_queue:1.x-dev
-  ```
+1. Fork this repo.
+2. Sign up at [cloud.laravel.com](https://cloud.laravel.com) and create an
+   application from the fork. See the
+   [Cloud docs](https://cloud.laravel.com/docs).
+3. Attach a
+   [MySQL database](https://cloud.laravel.com/docs/resources/databases), a
+   public [bucket](https://cloud.laravel.com/docs/resources/object-storage)
+   and a [managed queue](https://cloud.laravel.com/docs/queues).
+4. Set the [environment](https://cloud.laravel.com/docs/environments)
+   variables `APP_SECRET` (the hash salt) and `DRUPAL_CRON_SCHEDULE` (for
+   example `@hourly`).
+5. Set the build command to
+   `composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader`
+   and the deploy command to
+   `php web/modules/contrib/laravelcloud/deploy.php`. It runs `drush deploy`,
+   and does nothing while the database is empty.
+6. Deploy. Then install the site by running `vendor/bin/drush site:install`
+   once as a command in the environment.
+7. Add a background process running `vendor/bin/dr lc:cron`. If the
+   environment scales to zero, enable "Wake up interval" on the App cluster.
+   See [compute](https://cloud.laravel.com/docs/compute).
+8. Optional: for backups and previews, create a private backup bucket, set
+   `DB_BACKUP_URL` and `DB_BACKUP_SCHEDULE`, and point a
+   [preview environment](https://cloud.laravel.com/docs/preview-environments)
+   automation at `preview-deploy.php`. Change `origin` in
+   [stage_file_proxy.settings.yml](config/stage_file_proxy.settings.yml) to
+   your own bucket's URL so previews fetch files from your production.
+9. Optional: for local development, run the fork with the
+   [DDEV quickstart](https://docs.ddev.com/en/stable/users/quickstart/), then
+   `ddev add-on get weitzman/ddev-laravelcloud` and `ddev pull laravelcloud`.
 
-- **Prepare the repo.** Commit `composer.lock`, a docroot symlink
-  (`ln -s web public`) and the queue module's `console` file copied to
-  `bin/console`. Enable `laravelcloud`, `laravelcloud_queue` and `s3fs`,
-  uninstall `automated_cron`, and export config.
-- **Edit `settings.php`.** Add `laravelcloud_settings($settings, $databases, $config);`
-  and select the `queue.laravelcloud` backend, as in
-  [settings.php](web/sites/default/settings.php).
-- **Create the Cloud application.** Sign up at
-  [cloud.laravel.com](https://cloud.laravel.com), connect the Git repo and
-  install the `cloud` CLI (`composer global require laravel/cloud-cli`). See
-  the [Cloud docs](https://cloud.laravel.com/docs).
-- **Attach resources.** A
-  [MySQL database](https://cloud.laravel.com/docs/resources/databases), a
-  public [bucket](https://cloud.laravel.com/docs/resources/object-storage)
-  and a [managed queue](https://cloud.laravel.com/docs/queues).
-- **Set environment variables.** `APP_SECRET` (the hash salt) and
-  `DRUPAL_CRON_SCHEDULE` (for example `@hourly`). See
-  [environments](https://cloud.laravel.com/docs/environments).
-- **Set build and deploy commands.** Build:
-  `composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader`.
-  Deploy: `php web/modules/contrib/laravelcloud/deploy.php`, which runs
-  `drush deploy` and does nothing while the database is empty.
-- **Install the site.** The new database is empty. After the first deploy,
-  run `vendor/bin/drush site:install` once as a command in the environment.
-- **Add cron.** Create a background process running `vendor/bin/dr lc:cron`.
-  If the environment scales to zero, enable "Wake up interval" on the App
-  cluster. See [compute](https://cloud.laravel.com/docs/compute).
-- **Add backups and previews (optional).** Create a private backup bucket,
-  set `DB_BACKUP_URL` and `DB_BACKUP_SCHEDULE`, and point a
-  [preview environment](https://cloud.laravel.com/docs/preview-environments)
-  automation at `preview-deploy.php`. Add
-  [Stage File Proxy](https://www.drupal.org/project/stage_file_proxy) and
-  [S3FS File Proxy to S3](https://www.drupal.org/project/s3fs_file_proxy_to_s3)
-  so previews fetch files from production.
-- **Pull production down for local development.** `ddev pull laravel-cloud`, using
-  [the provider](.ddev/providers/laravel-cloud.yaml) from this repo.
+### Get your own Drupal application onto Laravel Cloud
+
+1. Start from an existing Composer-based Drupal project, or
+   [create one](https://www.drupal.org/docs/getting-started/installing-drupal/get-the-code).
+2. Add the packages. Do this before creating the Cloud application: Cloud
+   detects a Symfony app from `symfony/framework-bundle`, and managed queues
+   depend on that. The modules have no tagged release yet; this repo's
+   [composer.json](composer.json) shows the `repositories` entries they need.
+
+   ```bash
+   composer require drush/drush symfony/framework-bundle drupal/s3fs drupal/laravelcloud:1.x-dev drupal/laravelcloud_queue:1.x-dev
+   ```
+
+3. Commit `composer.lock`, a docroot symlink (`ln -s web public`) and the
+   queue module's `console` file copied to `bin/console`.
+4. Enable `laravelcloud`, `laravelcloud_queue` and `s3fs`, uninstall
+   `automated_cron`, and export config.
+5. In `settings.php`, add
+   `laravelcloud_settings($settings, $databases, $config);` and select the
+   `queue.laravelcloud` backend, as in
+   [settings.php](web/sites/default/settings.php).
+6. For previews, add
+   [Stage File Proxy](https://www.drupal.org/project/stage_file_proxy) and
+   [S3FS File Proxy to S3](https://www.drupal.org/project/s3fs_file_proxy_to_s3)
+   so they fetch files from production.
+7. Push, then follow steps 2 to 9 above with your own repo. For an existing
+   site, import its database instead of running `site:install`, and copy its
+   public files to the bucket.
