@@ -52,17 +52,14 @@ text{fill:#f0f6fc}
 <text class="c t" x="585.0" y="140.5">awake</text>
 <rect class="off" x="650" y="114" width="150" height="44" rx="6"/>
 <text class="c s" x="725.0" y="140.5">hibernating</text>
-<rect class="drupal" x="800" y="114" width="100" height="44" rx="6"/>
-<text class="c t" x="850.0" y="140.5">awake</text>
-<rect class="off" x="900" y="114" width="76" height="44" rx="6"/>
-<text class="c s" x="938.0" y="140.5">hibernating</text>
+<rect class="drupal" x="800" y="114" width="176" height="44" rx="6"/>
+<text class="c t" x="888" y="140.5">awake</text>
 <text class="s c" x="520" y="88">a request arrives</text><path class="l" d="M520 94V108" marker-end="url(#a)"/>
 <text class="s c" x="800" y="88">wake-up interval</text><path class="l" d="M800 94V108" marker-end="url(#a)"/>
 <g transform="translate(0 9)">
 <text class="t" x="24" y="197">Drupal cron</text>
 <path class="l" d="M400 184V200"/>
 <path class="l" d="M740 184V200"/>
-<path class="l" d="M910 184V200"/>
 <path class="gear" fill-rule="evenodd" d="M234.6 190.8L236.7 191.1L236.7 192.9L234.6 193.2L234.2 194.4L235.4 196.1L234.1 197.4L232.4 196.2L231.2 196.6L230.9 198.7L229.1 198.7L228.8 196.6L227.6 196.2L225.9 197.4L224.6 196.1L225.8 194.4L225.4 193.2L223.3 192.9L223.3 191.1L225.4 190.8L225.8 189.6L224.6 187.9L225.9 186.6L227.6 187.8L228.8 187.4L229.1 185.3L230.9 185.3L231.2 187.4L232.4 187.8L234.1 186.6L235.4 187.9L234.2 189.6zM227.8 192a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0z"/>
 <path class="spin" d="M238 185.3A10.5 10.5 0 1 1 224 183.4"/>
 <path class="gear" d="M227.7 180.8L222.1 180.8L225.8 186z"/>
@@ -77,7 +74,11 @@ text{fill:#f0f6fc}
 <path class="gear" fill-rule="evenodd" d="M819.6 190.8L821.7 191.1L821.7 192.9L819.6 193.2L819.2 194.4L820.4 196.1L819.1 197.4L817.4 196.2L816.2 196.6L815.9 198.7L814.1 198.7L813.8 196.6L812.6 196.2L810.9 197.4L809.6 196.1L810.8 194.4L810.4 193.2L808.3 192.9L808.3 191.1L810.4 190.8L810.8 189.6L809.6 187.9L810.9 186.6L812.6 187.8L813.8 187.4L814.1 185.3L815.9 185.3L816.2 187.4L817.4 187.8L819.1 186.6L820.4 187.9L819.2 189.6zM812.8 192a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0z"/>
 <path class="spin" d="M823 185.3A10.5 10.5 0 1 1 809 183.4"/>
 <path class="gear" d="M812.7 180.8L807.1 180.8L810.8 186z"/>
-<path class="l" stroke-dasharray="3 3" d="M910 192H976"/>
+<g transform="translate(340 0)">
+<path class="gear" fill-rule="evenodd" d="M574.6 190.8L576.7 191.1L576.7 192.9L574.6 193.2L574.2 194.4L575.4 196.1L574.1 197.4L572.4 196.2L571.2 196.6L570.9 198.7L569.1 198.7L568.8 196.6L567.6 196.2L565.9 197.4L564.6 196.1L565.8 194.4L565.4 193.2L563.3 192.9L563.3 191.1L565.4 190.8L565.8 189.6L564.6 187.9L565.9 186.6L567.6 187.8L568.8 187.4L569.1 185.3L570.9 185.3L571.2 187.4L572.4 187.8L574.1 186.6L575.4 187.9L574.2 189.6zM567.8 192a2.2 2.2 0 1 0 4.4 0a2.2 2.2 0 1 0 -4.4 0z"/>
+<path class="spin" d="M578 185.3A10.5 10.5 0 1 1 564 183.4"/>
+<path class="gear" d="M567.7 180.8L562.1 180.8L565.8 186z"/>
+</g>
 <text class="s c" x="400" y="218">due while asleep</text>
 <text class="s" x="470" y="218">runs within a minute of waking</text>
 </g>
