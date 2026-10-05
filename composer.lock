@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9f606cd78b05a623057da731dd683621",
+    "content-hash": "067db475d68bb566dade2edd388b82e3",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1589,11 +1589,11 @@
         },
         {
             "name": "drupal/laravelcloud",
-            "version": "dev-claude/automatic-redis-support-8c0d8d",
+            "version": "1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/laravelcloud.git",
-                "reference": "a581ad53c3812a67d295211c22aefedeb014034b"
+                "reference": "fcada9ae4b6f271d1c65ed253d4236953ca23bc6"
             },
             "require": {
                 "aws/aws-sdk-php": "^3.337",
@@ -1605,6 +1605,7 @@
                 "drupal/redis": "^1.10",
                 "drupal/s3fs": "^3.11"
             },
+            "default-branch": true,
             "type": "drupal-module",
             "autoload": {
                 "files": [
@@ -1615,7 +1616,7 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Cron, settings, database backups and preview deploys for Drupal on Laravel Cloud.",
-            "time": "2026-10-05T05:28:33+00:00"
+            "time": "2026-10-05T05:33:26+00:00"
         },
         {
             "name": "drupal/laravelcloud_queue",
