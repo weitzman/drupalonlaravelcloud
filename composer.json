@@ -135,7 +135,7 @@
                 "#3264534: Add file cache tags to the responsive image formatter": "patches/core-3264534-responsive-image-file-cache-tags.patch"
             },
             "drupal/s3fs": {
-                "Invalidate the cache tags of every file entity for a converted derivative": "patches/s3fs-invalidate-file-cache-tags.patch"
+                "#3628510: File cache tags not invalidated for converted derivatives of root-level files, or when several files share a URI": "patches/s3fs-invalidate-file-cache-tags.patch"
             }
         }
     }

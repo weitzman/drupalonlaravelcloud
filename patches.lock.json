@@ -1,5 +1,5 @@
 {
-    "_hash": "b3d59f90f09d1d3c8189122d3edd8df65601ee29c39d8fbba5cabea53921733d",
+    "_hash": "ae0d16df5245af878a21062e2a1584bb84c8ccd6495afbcb28760f4290747c5e",
     "patches": {
         "drupal/core": [
             {
@@ -16,7 +16,7 @@
         "drupal/s3fs": [
             {
                 "package": "drupal/s3fs",
-                "description": "Invalidate the cache tags of every file entity for a converted derivative",
+                "description": "#3628510: File cache tags not invalidated for converted derivatives of root-level files, or when several files share a URI",
                 "url": "patches/s3fs-invalidate-file-cache-tags.patch",
                 "sha256": "46541ab0d404aa510d374b264e84288adc3ca5ee5c0d277b3d5c9e470b35d5fd",
                 "depth": 1,
