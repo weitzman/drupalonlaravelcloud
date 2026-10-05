@@ -61,3 +61,6 @@
 /drush
 /drupal.phar
 /drupal
+
+# Ignore DDEV environment variables, such as DB_BACKUP_URL
+/.ddev/.env

@@ -1,0 +1,24 @@
+# Laravel Cloud provider: pulls the database backup into DDEV.
+#
+# Usage: ddev pull laravelcloud
+#
+# Downloads the db.sql.gz that `dr lc:db-backup` uploads to a private bucket on
+# each deploy of the source environment. See "Database backup" in the
+# laravelcloud module's README.
+#
+# Requirements:
+#   - DB_BACKUP_URL, set to the bucket's read-only URL, in the web container.
+#     Put it in .ddev/.env (then `ddev restart`) or in the project's .env; both
+#     are ignored by git.
+#
+# The backup is not sanitized. Its cache, session and log tables are empty.
+#
+# Files are not pulled; public files usually live in object storage. Suggest
+# using stage_file_proxy instead.
+
+db_pull_command:
+  command: |
+    # set -x   # You can enable bash debugging output by uncommenting.
+    set -eu -o pipefail
+    mkdir -p /var/www/html/.ddev/.downloads
+    /var/www/html/bin/db-backup-download /var/www/html/.ddev/.downloads/db.sql.gz
