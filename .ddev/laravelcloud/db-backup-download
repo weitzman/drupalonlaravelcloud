@@ -1,0 +1,39 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * @file
+ * Downloads the database backup that "dr lc:db-backup" uploads.
+ *
+ * #ddev-generated
+ *
+ * Usage: php .ddev/laravelcloud/db-backup-download [DESTINATION]
+ *
+ * Run in the web container. DESTINATION defaults to db.sql.gz in the current
+ * directory. Needs DB_BACKUP_URL; see "Database backup" in the laravelcloud
+ * module's README.
+ */
+
+$autoload = (getenv('DDEV_COMPOSER_ROOT') ?: dirname(__DIR__, 2)) . '/vendor/autoload.php';
+if (!is_file($autoload)) {
+  fwrite(STDERR, "$autoload not found. Run `ddev composer install`.\n");
+  exit(1);
+}
+
+// The laravelcloud module's autoloaded file reads the project's .env.
+require $autoload;
+
+if (!getenv('DB_BACKUP_URL')) {
+  fwrite(STDERR, "DB_BACKUP_URL is not set. Set it to the backup bucket's read-only URL.\n");
+  exit(1);
+}
+
+if (!function_exists('laravelcloud_db_backup')) {
+  fwrite(STDERR, "laravelcloud_db_backup() not found. Run `ddev composer require drupal/laravelcloud`.\n");
+  exit(1);
+}
+
+$destination = $argv[1] ?? 'db.sql.gz';
+[$client, $object] = laravelcloud_db_backup();
+$client->getObject($object + ['SaveAs' => $destination]);
+echo "Downloaded the database backup to $destination.\n";

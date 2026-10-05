@@ -1,0 +1,9 @@
+name: laravelcloud
+repository: weitzman/ddev-laravelcloud
+version: 1.0.0-rc1
+install_date: "2026-10-04T23:00:12-04:00"
+project_files:
+    - providers/laravelcloud.yaml
+    - laravelcloud/db-backup-download
+global_files: []
+removal_actions: []

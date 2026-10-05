@@ -1,3 +1,4 @@
+#ddev-generated
 # Laravel Cloud provider: pulls the database backup into DDEV.
 #
 # Usage: ddev pull laravelcloud
@@ -7,6 +8,7 @@
 # laravelcloud module's README.
 #
 # Requirements:
+#   - The drupal/laravelcloud module, installed with Composer.
 #   - DB_BACKUP_URL, set to the bucket's read-only URL, in the web container.
 #     Put it in .ddev/.env (then `ddev restart`) or in the project's .env; both
 #     are ignored by git.
@@ -21,4 +23,4 @@ db_pull_command:
     # set -x   # You can enable bash debugging output by uncommenting.
     set -eu -o pipefail
     mkdir -p /var/www/html/.ddev/.downloads
-    /var/www/html/bin/db-backup-download /var/www/html/.ddev/.downloads/db.sql.gz
+    php /var/www/html/.ddev/laravelcloud/db-backup-download /var/www/html/.ddev/.downloads/db.sql.gz
