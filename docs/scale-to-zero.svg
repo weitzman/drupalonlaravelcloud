@@ -19,6 +19,7 @@ text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,san
 .l{stroke:#59636e;fill:none;stroke-width:1.5}
 .ah{fill:#59636e}
 .dot{fill:#0678be;stroke:#0678be;stroke-width:1.5}
+.lane{fill:#f6f8fa}
 .gear{fill:#0678be}
 .spin{fill:none;stroke:#0678be;stroke-width:1.5}
 @media (prefers-color-scheme:dark){
@@ -35,12 +36,16 @@ text{fill:#f0f6fc}
 .l{stroke:#9198a1}
 .ah{fill:#9198a1}
 .dot{fill:#4aa8e0;stroke:#4aa8e0}
+.lane{fill:#151b23}
 .gear{fill:#4aa8e0}
 .spin{stroke:#4aa8e0}
 }
 </style>
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="ah"/></marker></defs>
 <rect class="bg" x="0.5" y="0.5" width="999" height="360" rx="10"/>
+<rect class="lane" x="12" y="70" width="976" height="96" rx="6"/>
+<rect class="lane" x="12" y="178" width="976" height="62" rx="6"/>
+<rect class="lane" x="12" y="252" width="976" height="80" rx="6"/>
 <text class="h" x="24" y="38">Scale to zero</text>
 <text class="s" x="24" y="58">Nothing runs while idle. Cron and queues keep working.</text>
 <text class="t" x="24" y="141">App cluster</text>
