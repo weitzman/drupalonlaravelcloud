@@ -61,7 +61,7 @@ layer of its own.
   available installs from config (if available) instead, so it always comes
   up.
 - It is small, has no admin UI to configure, and ships unit, kernel and
-  end-to-end tests.
+  build tests.
 
 ### [Laravel Cloud Queue](https://www.drupal.org/project/laravelcloud_queue)
 
