@@ -5,9 +5,9 @@ It is Drupal's Umami demo, deployed the way Cloud deploys a Laravel or Symfony
 app: push to Git, Cloud builds and deploys.
 
 The site uses Cloud's own database, object
-storage, managed queues, background processes, CDN cache (Cloudflare) and preview environments.
+storage, managed queues, background processes, CDN (Cloudflare), and preview environments.
 
-Laravel Cloud's scale to zero functionality positions it as highly capable AND highly affordable.
+Laravel Cloud's scale to zero capability is unique in how it saves money, and still spins up from sleep in under a second.
 
 ![Architecture: visitors and git push on the left; the App cluster, queue workers and Cloud resources inside Laravel Cloud](docs/architecture.svg)
 
